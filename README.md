@@ -3,9 +3,9 @@ Proyecto Tratamiento de la Información en Sistemas Distribuidos
 
 ---
 ## Integrantes 
-Arianna Andreoli /n
-Alvaro Lopez /n
-Francisco Lopez /n
+Arianna Andreoli \n
+Alvaro Lopez \n
+Francisco Lopez \n
 
 ---
 ## Tema
