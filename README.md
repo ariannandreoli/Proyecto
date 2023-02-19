@@ -12,4 +12,4 @@ Francisco Lopez
 
 ---
 ## Tema
-Crearemos una aplicacion que guarde la informacion sobre peliculas, sus titulos, directores, genero, reparto y valoracion. La aplicacion deberia de permitir que los usuarios busquen las peliculas segun diferentes criterios y poder enseñarles la informacion detallada sobre cada pelicula. 
+Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, tipos, genero, movimientos, habilidades y HP (hit points). La aplicacion deberia de permitir que los entrenadores busquen la informacion sobre los pokemons segun lo que les interese y que los tarbajadores de los pokemon center puedan facilitarle esta informacion o incluso ayudar a curarlo si esta herido.  
