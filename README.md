@@ -18,3 +18,11 @@ Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, 
 ## Diagrama UML
 
 ![UML](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/UML.jpg)
+
+
+
+
+--
+## Diagrama Entidad Relación
+
+![ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/E_R.jpg)
