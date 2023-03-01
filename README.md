@@ -39,7 +39,7 @@ La primera entidad a comentar es "Entrenador" que tiene los atributos "Género" 
 
 Extraemos del diagrama entidad relacion las distintas entidades:
 
-
+![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/Tablas%20de%20ER.jpg)
 
 
 
