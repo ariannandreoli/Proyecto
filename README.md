@@ -28,7 +28,7 @@ Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, 
 ---
 ## Diagrama Entidad Relación
 
-![ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/E_R.jpg)
+![ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/ER.jpg)
 
 En el diagrama podemos encontrar 5 entidades con sus respectivos atributos y relaciones.
 La primera entidad a comentar es "Entrenador" que tiene los atributos "Género" y "Nombre" en donde se no admitiran datos nulos. La segunda entidad es "Pokédex" que tiene los atributos "Id", "Nombre", "Foto" y "Descripción". La tercera entidad es "Pokémon" que tiene los atributos "Id", "Tipo", "Vida", "Habilidad", "Género "y "Ruta", donde se admitiran datos nulos en el sexo, ya que ciertos pokemons no poseen uno. La cuarta entidad es "Centro Pokémon" que tiene los atributos "Ciudad" y "Trabajadores". La quinta entidad es "Gimnasio" que tiene los atributos "Líder", "Medalla" y "Ciudad". 
@@ -39,7 +39,7 @@ La primera entidad a comentar es "Entrenador" que tiene los atributos "Género" 
 
 Extraemos del diagrama entidad relacion las distintas entidades:
 
-![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/Tablas%20de%20ER.jpg)
+![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/TABLAS_ER.jpg)
 
 
 
