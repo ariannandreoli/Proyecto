@@ -50,4 +50,11 @@ Extraemos del diagrama entidad relacion las distintas entidades:
 Podemos encontrar tablas de relacion entre el entranador y los pokemones ya que distintos entrenadores pueden tener distintos pokemones, cada pokemon contiene uno o mas tipos por lo que relacionamos las entidades muchos a muchos. Muchos entrenadores pueden visitar muchos Centros Pokemons por lo que debemos realizar otra tabla de relacion entre ellas. 
 
 
+---
+##Diagrama Interfaz
+
+![DiagramaInterfaz](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/DiagramaInterfaz.jpg)
+
+
+
 
