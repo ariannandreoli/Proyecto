@@ -51,7 +51,7 @@ Podemos encontrar tablas de relacion entre el entranador y los pokemones ya que 
 
 
 ---
-##Diagrama Interfaz
+## Diagrama Interfaz
 
 ![DiagramaInterfaz](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/DiagramaInterfaz.jpg)
 
