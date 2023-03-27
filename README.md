@@ -55,6 +55,11 @@ Podemos encontrar tablas de relacion entre el entranador y los pokemones ya que 
 
 ![DiagramaInterfaz](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/DiagramaInterfaz.jpg)
 
+Utilizamos el modelo de entidad relación y lo pasamos a tablas de forma que cada entidad tiene su tabla propia y cada relación cumple con los requisitos según su tipo:
+-Las n a m: Debe de volverlas una tabla separada donde relacionemos ambas entidades, entre ellas estas: “Pokedex_Pokemon” , “Entrenador_Pokemon”, “Pokemon-Tipo” y “Centro_Pokemon”. 
+-Las 1 a 1: Debemos de llamar la clave primaria de alguna de las tablas en la otra tabla, esto lo hicimos en la relación entre Entrenador y Pokédex donde en la tabla del atributo Pokédex agregamos el Id del entrenador. 
+-Las 1 a n: debemos de agregar la clave primaria como clave ajena en la tabla de muchos, esto lo realizamos en la tabla de Pokemon donde agregamos un atributo llamado “RutaP” que es una clave primaria al atributo Ruta. 
+
 
 
 
