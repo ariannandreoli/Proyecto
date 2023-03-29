@@ -52,18 +52,19 @@ Extraemos del diagrama entidad relacion las distintas entidades:
 ![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/TABLAS_ER.jpg)
 
 
-Podemos encontrar tablas de relacion entre el entranador y los pokemones ya que distintos entrenadores pueden tener distintos pokemones, cada pokemon contiene uno o mas tipos por lo que relacionamos las entidades muchos a muchos. Muchos entrenadores pueden visitar muchos Centros Pokemons por lo que debemos realizar otra tabla de relacion entre ellas. 
-
+Utilizamos el modelo de entidad relación y lo pasamos a tablas de forma que cada entidad tendra su tabla propia y cada relación cumple con los requisitos según su tipo:
+-Las n a m: Debe de volverlas una tabla separada donde relacionemos ambas entidades, entre ellas estas: “Pokedex_Pokemon” , “Entrenador_Pokemon”, “Pokemon-Tipo” y “Centro_Pokemon”. 
+-Las 1 a 1: Debemos de llamar la clave primaria de alguna de las tablas en la otra tabla, esto lo hicimos en la relación entre Entrenador y Pokédex donde en la tabla del atributo Pokédex agregamos el Id del entrenador. 
+-Las 1 a n: debemos de agregar la clave primaria como clave ajena en la tabla de muchos, esto lo realizamos en la tabla de Pokemon donde agregamos un atributo llamado “RutaP” que es una clave primaria al atributo Ruta. 
 
 ---
 ## Diagrama Interfaz
 
+Aquí podemos encontrar los menus que mostrará nuestra aplicación: 
+
 ![DiagramaInterfaz](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/DiagramaInterfaz.jpg)
 
-Utilizamos el modelo de entidad relación y lo pasamos a tablas de forma que cada entidad tiene su tabla propia y cada relación cumple con los requisitos según su tipo:
--Las n a m: Debe de volverlas una tabla separada donde relacionemos ambas entidades, entre ellas estas: “Pokedex_Pokemon” , “Entrenador_Pokemon”, “Pokemon-Tipo” y “Centro_Pokemon”. 
--Las 1 a 1: Debemos de llamar la clave primaria de alguna de las tablas en la otra tabla, esto lo hicimos en la relación entre Entrenador y Pokédex donde en la tabla del atributo Pokédex agregamos el Id del entrenador. 
--Las 1 a n: debemos de agregar la clave primaria como clave ajena en la tabla de muchos, esto lo realizamos en la tabla de Pokemon donde agregamos un atributo llamado “RutaP” que es una clave primaria al atributo Ruta. 
+
 
 
 
