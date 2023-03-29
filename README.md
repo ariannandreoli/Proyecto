@@ -21,8 +21,13 @@ Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, 
 
 ![UML](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/UML.jpg)
 
-  El entrenador puede informarse de los pokemons, de forma que si este consigue uno nuevo puede actualizar el pokedex para agregar la informacion en este o incluso para capturar dicho pokemon. 
-  El centro pokemon proporciona la informacion de la localizcion de los pokemons y da la posibilidad de evolucionar los pokemons de los entrenadores que asistan al centro. 
+Estos actores desempeñan diferentes papeles:
+El entrenador: al tratarse del mundo de los pokemones necesitamos un entrenador capaz de poder capturarlos y actualizar el Pokédex para futuros entrenadores. 
+El centro Pokemon: necesitamos a alguien capaz de evolucionar y localizar los pokemones 
+A continuación, notaremos los casos de uso de nuestro sistema, estos son las acciones que realizan nuestros actores y vienen representados como óvalos:
+El entrenador puede consultar información sobre un Pokemon en el Pokédex, si ya consigue alguno nuevo puede capturarlo e incluso agregar esta información en la Pokédex de forma que se actualice para el proximo Pokemon que se va a buscar
+El centro Pokemon sera capaz de ayudar al entrenador a localizar los pokemons y a evolucionar los Pokemons del entrenador que lo lleve
+Por último, nuestro sistema Pokemons que lo utilizamos para definir el alcance de los casos de uso y aparece representado como un rectángulo.
 
 
 ---
@@ -30,7 +35,7 @@ Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, 
 
 ![ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/ER.jpg)
 
-En el diagrama podemos encontrar 5 entidades con sus respectivos atributos y relaciones.
+En el diagrama podemos encontrar 6 entidades con sus respectivos atributos y relaciones.
 La primera entidad a comentar es "Entrenador" que tiene los atributos "Género" y "Nombre" en donde se no admitiran datos nulos, este entrenador debemos relacionarlo con el pokedex ya que esta va a poder actualizar y editar la informacion de este en caso de conseguir un pokemon y relacionarlo con los pokemon ya que el entrenador puede tener distintos pokemones. 
 La segunda entidad es "Pokédex" que tiene los atributos "Id y "Descripcion", debemos relacionarlo con los pokemones ya que en el pokedex queremos cargar informacion sobre estos. 
 La tercera entidad es "Pokémon" que tiene los atributos "Id", "Nombre", "Nivel", "Habilidad", "Género "y "RutaP", donde se admitiran datos nulos en el sexo, ya que ciertos pokemons no poseen uno, a traves de los pokemons podremos obtener el tipo de este.
