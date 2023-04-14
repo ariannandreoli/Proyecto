@@ -1,0 +1,5 @@
+Cada vez que modifiquemos el ddl tenemos que borrar las base de dotos para que vuelva 
+a subirse en el programa. 
+
+
+los prepared statement deben ir luego de la inicializacion de las tablas o dentro de ese bucle
