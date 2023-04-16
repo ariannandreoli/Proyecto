@@ -10,7 +10,7 @@ public interface DBManager {
 
 	void disconnect();
 
-	int countElementsFromTable(String tableName);
+	int countElementsFromTable (String tableName);
 
 	ArrayList<Entrenador> getEntrenador();
 }

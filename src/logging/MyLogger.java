@@ -13,7 +13,7 @@ public class MyLogger {
     private final static Level LOGGER_LVL = Level.FINEST;
     private final static Level CONSOLE_LVL = Level.FINEST;
     private final static Level FILE_LVL = Level.INFO;
-    private final static String LOGGING_FILE = "./lib/logging.properties";
+    private final static String LOGGING_FILE = "./lib/logging.properties";	//QUE SE AGREGABA EN LIB??
     
     static public void setup(){
     	Logger rootLogger = Logger.getLogger("");

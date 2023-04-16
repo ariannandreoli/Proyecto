@@ -31,7 +31,7 @@ public class JDBCManager implements DBManager{
 	public void connect() {
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:./db/pokemon.db");
+			c = DriverManager.getConnection("jdbc:sqlite:./db/pokemonWorld.db");
 			stmt = c.createStatement();
 			//prepCount = c.prepareStatement(STMT_COUNT);
 			

@@ -16,7 +16,6 @@ public class Main {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	public static DBManager dbman;
 	public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	//private final static String[] MENU_ACTUALIZAR_MENU = {"Cancelar", "Añadir producto", "Borrar Producto", "Actualizar Producto"};
 	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
 	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
 	
