@@ -1,4 +1,4 @@
-package main;		//TODO lo relacionado con la interfaz 
+package main;		//lo relacionado con la interfaz 
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import db.jdbc.JDBCManager;
 import logging.MyLogger;
 import pojo.Entrenador;
 
-
 public class Main {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	public static DBManager dbman;
@@ -23,7 +22,7 @@ public class Main {
 		MyLogger.setupFromFile();
 		dbman = new JDBCManager();
 		dbman.connect();
-		System.out.println("¡Bienvenido a al mundo Pokemon!");
+		System.out.println("¡Bienvenido al mundo Pokemon!");
 		int respuesta;
 		do {
 			respuesta = showMenu(MENU_PRINCIPAL);

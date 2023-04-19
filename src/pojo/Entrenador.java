@@ -33,4 +33,6 @@ public class Entrenador {
 	public void setGenero(String genero) {
 		this.genero = genero;
 	}
+	
+	
 }
