@@ -33,6 +33,12 @@ public class Entrenador {
 	public void setGenero(String genero) {
 		this.genero = genero;
 	}
+
+	@Override
+	public String toString() {
+		return "Entrenador [id=" + id + ", nombre=" + nombre + ", genero=" + genero + "]";
+	}
+	
 	
 	
 }

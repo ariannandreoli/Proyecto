@@ -3,17 +3,18 @@ package logging;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.*;
-
 
 public class MyLogger {
     final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private final static Level LOGGER_LVL = Level.FINEST;
     private final static Level CONSOLE_LVL = Level.FINEST;
     private final static Level FILE_LVL = Level.INFO;
-    private final static String LOGGING_FILE = "./lib/logging.properties";	//QUE SE AGREGABA EN LIB??
+    private final static String LOGGING_FILE = "./lib/logging.properties";
     
     static public void setup(){
     	Logger rootLogger = Logger.getLogger("");

@@ -17,8 +17,8 @@ import pojo.Entrenador;
 
 public class JDBCManager implements DBManager{
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	final String FICHERO_DDL = "./db/DDL.sql";
-	final String FICHERO_DML = "./db/DML.sql";
+	final String FICHERO_DDL = "./db/ddl.sql";
+	final String FICHERO_DML = "./db/dml.sql";
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
