@@ -17,6 +17,7 @@ public class Main {
 	public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
 	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
+	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -37,7 +38,27 @@ public class Main {
 	
 	private static void menuEntrenador() {
 		System.out.println("Menú Entrenador");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_ENTRENADOR);
+			switch(respuesta) {
+				case 1 -> menuRegistro();  //queremos que se registren y hagan login po que directamente entren sin verificacion? 
+				case 2 -> menuLogin();
+			}
+		} while(respuesta != 0);
 	}
+	
+	private static void menuLogin() {
+		
+	}
+
+	private static void menuRegistro() {
+		String nombre = askForText("Indique su nombre:");
+		String genero = askForText("Indique su genero:");
+		Entrenador entrenador = new Entrenador(0, nombre, genero);
+		dbman.addEntrenador(entrenador);
+	}
+	
 	
 	private static void menuCentroPokemon() {
 		System.out.println("Menú Centro Pokemon");
@@ -51,9 +72,13 @@ public class Main {
 		} while(respuesta != 0);
 	}
 	
-	private static Object gestionarEntrenador() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	
+	private static void gestionarEntrenador() {
+		String nombre = askForText("Indique su nombre:");
+		String genero = askForText("Indique su genero:");
+		System.out.printf("Entrenador: ", nombre, " bienvenido."); 
+		
 	}
 
 	private static Object localizarPokemon() {
@@ -61,6 +86,29 @@ public class Main {
 		return null;
 	}
 
+	private static float askForFloat(String text) {
+		float resultado = Float.parseFloat(askForText(text));
+		//TODO Comprobar que se puede convertir a float
+		return resultado;
+	}
+	
+	private static int askForInt(String text) {
+		int resultado = Integer.parseInt(askForText(text));
+		//TODO Comprobar que se puede convertir a int
+		return resultado;
+	}
+	
+	private static String askForText(String text) {
+		System.out.println(text);
+		String resultado = "";
+		try {
+			resultado = reader.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
+	}
 
 	private static int showMenu(String[] menu) {
 		int respuesta = -1;

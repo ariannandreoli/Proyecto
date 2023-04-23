@@ -22,9 +22,12 @@ public class JDBCManager implements DBManager{
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
+	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id=";
+	private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre=";
 	
 	private Statement stmt;
 	private PreparedStatement prepCount;
+	private PreparedStatement prepAddEntrenador;
 	private Connection c;
 	
 	@Override
@@ -108,5 +111,26 @@ public class JDBCManager implements DBManager{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public boolean addEntrenador(Entrenador entrenador) {
+		try {
+			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_NOMBRE + entrenador.getNombre()+ "\";");
+			if(rs.next()) {
+				return false;
+			}	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			prepAddEntrenador.setString(1, entrenador.getNombre());
+			prepAddEntrenador.setString(2, entrenador.getGenero());
+			prepAddEntrenador.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
 	}
 }

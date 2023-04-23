@@ -13,4 +13,6 @@ public interface DBManager {
 	int countElementsFromTable (String tableName);
 
 	ArrayList<Entrenador> getEntrenador();
+
+	boolean addEntrenador(Entrenador entrenador);
 }
