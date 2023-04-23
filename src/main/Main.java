@@ -18,6 +18,7 @@ public class Main {
 	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
 	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
+	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -49,6 +50,10 @@ public class Main {
 	}
 	
 	private static void menuLogin() {
+		String nombre = askForText("Indique su nombre:");
+		String genero = askForText("Indique su genero:");
+		//si existe el entrenador con mismo nombre y genero en la tabla: ir a menu que te permita consultar actualizar o capturar pokemons
+		
 		
 	}
 
@@ -75,11 +80,34 @@ public class Main {
 	
 	
 	private static void gestionarEntrenador() {
-		String nombre = askForText("Indique su nombre:");
-		String genero = askForText("Indique su genero:");
-		System.out.printf("Entrenador: ", nombre, " bienvenido."); 
-		
+		System.out.println("Menú Entrenador dentro del Centro Pokemon");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR);
+			switch(respuesta) {
+				case 1 -> menuIdEntrenador();
+			}
+		} while(respuesta != 0);
 	}
+
+		
+	private static void menuIdEntrenador() {
+		System.out.println("Menú Entrenador dentro del Centro Pokemon");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR);
+			switch(respuesta) {
+				case 1 -> menuPokemonDelEntrenador();
+			}
+		} while(respuesta != 0);
+	}
+
+
+	private static Object menuPokemonDelEntrenador() {		//hacer un get de los pokemones del entrenador y que muestre caso para cada pokemon que tiene
+		// TODO Auto-generated method stub					//Luego crear un menu donde seleccionando el pokemon se evolucione, cpnsulte nivel o salga
+		return null;
+	}
+
 
 	private static Object localizarPokemon() {
 		// TODO Auto-generated method stub

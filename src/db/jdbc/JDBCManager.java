@@ -22,7 +22,6 @@ public class JDBCManager implements DBManager{
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
-	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id=";
 	private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre=";
 	
 	private Statement stmt;
