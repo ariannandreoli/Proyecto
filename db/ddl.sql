@@ -38,8 +38,8 @@ PRIMARY KEY (IdEntrenador, IdCentro));
 
 CREATE TABLE IF NOT EXISTS Pokedex (
 Id INTEGER UNIQUE NOT NULL PRIMARY KEY, 
-IdEntrenador INTEGER REFERENCES Entrenador,
-Descripcion TEXT
+IdEntrenador INTEGER REFERENCES Entrenador
+/*Descripcion TEXT*/
 );
 
 CREATE TABLE IF NOT EXISTS "Pokedex_Pokemon" (

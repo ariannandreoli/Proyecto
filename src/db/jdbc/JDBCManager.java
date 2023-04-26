@@ -13,7 +13,9 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import db.interfaces.DBManager;
+import factory.Factory;
 import pojo.Entrenador;
+
 
 public class JDBCManager implements DBManager{
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -22,22 +24,24 @@ public class JDBCManager implements DBManager{
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
-	private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre=";
+	private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre= ? ";
+	private static final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id=";
+	
+	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	
 	private Statement stmt;
 	private PreparedStatement prepCount;
 	private PreparedStatement prepAddEntrenador;
 	private Connection c;
 	
+	private final int NUM_ENTRENADOR = 1000;
+	
 	@Override
 	public void connect() {
 		try {
 			Class.forName("org.sqlite.JDBC");
-			//c = DriverManager.getConnection("jdbc:sqlite:./Users/arianna/Desktop/Pokemon/Proyecto/db/pokemonWorld.db");
 			c = DriverManager.getConnection("jdbc:sqlite:./db/pokemonWorld.db");
 			stmt = c.createStatement();
-			//prepCount = c.prepareStatement(STMT_COUNT);
-			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -46,8 +50,33 @@ public class JDBCManager implements DBManager{
 			e.printStackTrace();
 		}
 		createTables();
+		initializeTables();
+		LOGGER.info("Inicializada la conexión a la base de datos");
+		LOGGER.finest("Este es un mensaje finest");
 	}
 	
+	
+	private void initializeTables() {
+		try {
+			prepAddEntrenador= c.prepareStatement(PREP_ADD_ENTRENADOR);
+			Factory factory = new Factory();
+			if(countElementsFromTable("Entrenador") == 0) {
+				for(int i = 0; i < NUM_ENTRENADOR; i++) {
+					//TODO Añadir los entrenadores en batch
+					Entrenador entrenador = factory.generarEntrenadorAleatorio();
+					addEntrenador(entrenador);
+				}
+				ArrayList<Entrenador> entrenador = getEntrenador();
+				LOGGER.info("Inicializadas las tablas Entrenadores, Centro Pokemon , Pokemones, Pokedex, Ruta, Tipo");
+			} else {
+				LOGGER.info("La tabla Entrenadores ya estaba inicializada");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		LOGGER.info("Inicializada la base de datos");
+	}
 
 	private void createTables() {
 		try {
@@ -111,10 +140,11 @@ public class JDBCManager implements DBManager{
 			e.printStackTrace();
 		}
 	}
+
 	@Override
 	public boolean addEntrenador(Entrenador entrenador) {
 		try {
-			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_NOMBRE + entrenador.getNombre()+ "\";");
+			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_ID + entrenador.getId()+ "\";"); //añadir el set string
 			if(rs.next()) {
 				return false;
 			}	
@@ -132,4 +162,5 @@ public class JDBCManager implements DBManager{
 		}
 		return true;
 	}
+	
 }

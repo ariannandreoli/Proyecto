@@ -18,7 +18,9 @@ public class Main {
 	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
 	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
+	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokedex", "Consultar Pokedex", "Capturar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
+	private static final String[] MENU_ACTUALIZAR_POKEDEX = {"Salir","Add Pokemon", "Actualizar Pokedex"};
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -52,9 +54,48 @@ public class Main {
 	private static void menuLogin() {
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
-		//si existe el entrenador con mismo nombre y genero en la tabla: ir a menu que te permita consultar actualizar o capturar pokemons
+		System.out.println("Estas loggeado");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_ENTRENADOR_LOGGED);
+			switch(respuesta) {
+				case 1 -> actualizarPokedex();  //queremos que se registren y hagan login po que directamente entren sin verificacion? 
+				case 2 -> consultarPokedex();
+				case 3 -> capturarPokemon();
+			}
+		} while(respuesta != 0);
+	}
 		
+	private static Object capturarPokemon() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static void consultarPokedex() {
 		
+	}
+	
+	private static void actualizarPokedex() {
+		System.out.println("Actualizando Pokedex");
+			int respuesta;
+			do {
+				respuesta = showMenu(MENU_ACTUALIZAR_POKEDEX);
+				switch(respuesta) {
+					case 1 -> menuAddPokemon();
+				}
+			} while(respuesta != 0);
+		}
+
+	
+
+	private static Object menuActualizarDescripcion() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private static Object menuAddPokemon() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private static void menuRegistro() {
@@ -63,6 +104,7 @@ public class Main {
 		Entrenador entrenador = new Entrenador(0, nombre, genero);
 		dbman.addEntrenador(entrenador);
 	}
+	
 	
 	
 	private static void menuCentroPokemon() {
