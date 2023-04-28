@@ -3,6 +3,7 @@ package db.jdbc;		//clase intermediaria con la base de datos
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,12 +16,16 @@ import java.util.logging.Logger;
 import db.interfaces.DBManager;
 import factory.Factory;
 import pojo.Entrenador;
+import pojo.Pokemon;
 
 
 public class JDBCManager implements DBManager{
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	final String FICHERO_DDL = "./db/ddl.sql";
 	final String FICHERO_DML = "./db/dml.sql";
+	final String FICHERO_DML_POKEMON = "./db/dml_pokemon.sql";
+	final String FICHERO_DML_TIPO = "./db/dml_tipo.sql";
+	final String FICHERO_DML_CENTRO = "./db/dml_centro.sql";
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
@@ -60,6 +65,29 @@ public class JDBCManager implements DBManager{
 		try {
 			prepAddEntrenador= c.prepareStatement(PREP_ADD_ENTRENADOR);
 			Factory factory = new Factory();
+			
+			if(countElementsFromTable("Pokemon") == 0) {
+				stmt.executeUpdate(readFile(FICHERO_DML_POKEMON));
+				LOGGER.info("Inicializada la tabla Pokemon");
+			} 
+			else {
+				LOGGER.info("La tabla Pokemon ya estaba inicializada");
+			} 
+			if(countElementsFromTable("Tipo") == 0) {
+				stmt.executeUpdate(readFile(FICHERO_DML_TIPO));
+				LOGGER.info("Inicializada la tabla Tipo");
+			} 
+			else {
+				LOGGER.info("La tabla Tipo ya estaba inicializada");
+			}
+			if(countElementsFromTable("Centro") == 0) {
+				stmt.executeUpdate(readFile(FICHERO_DML_CENTRO));
+				LOGGER.info("Inicializada la tabla Centro");
+			} 
+			else {
+				LOGGER.info("La tabla Centro ya estaba inicializada");
+			}
+			
 			if(countElementsFromTable("Entrenador") == 0) {
 				for(int i = 0; i < NUM_ENTRENADOR; i++) {
 					//TODO Añadir los entrenadores en batch
@@ -68,7 +96,8 @@ public class JDBCManager implements DBManager{
 				}
 				ArrayList<Entrenador> entrenador = getEntrenador();
 				LOGGER.info("Inicializadas las tablas Entrenadores, Centro Pokemon , Pokemones, Pokedex, Ruta, Tipo");
-			} else {
+			} 
+			else {
 				LOGGER.info("La tabla Entrenadores ya estaba inicializada");
 			}
 		} catch (SQLException e) {
@@ -77,6 +106,8 @@ public class JDBCManager implements DBManager{
 		}
 		LOGGER.info("Inicializada la base de datos");
 	}
+			
+
 
 	private void createTables() {
 		try {
@@ -162,5 +193,57 @@ public class JDBCManager implements DBManager{
 		}
 		return true;
 	}
+
+
+	@Override
+	public ArrayList<Pokemon> getPokemonByNombre() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int deletePokemon(Pokemon producto) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void addPokemon(Pokemon pokemon) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public boolean addImagenProducto(Pokemon pokemon) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit) {
+		String sql = "SELECT * FROM Pedidos ORDER BY Fecha LIMIT " + limit + " OFFSET " + offset + ";";
+		ArrayList<Pokemon> pokemons = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+				int id = rs.getInt("Id");
+				String nombre = rs.getString("Nombre");
+				int nivel = rs.getInt("Nivel");
+				String habilidad = rs.getString("Habilidad");
+				String genero = rs.getString("Genero");
+				String rutaP = rs.getString("RutaP");
+				Pokemon pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, rutaP);
+				pokemons.add(pokemon);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pokemons;
+		}
+	
 	
 }

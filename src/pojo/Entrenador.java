@@ -10,10 +10,8 @@ public class Entrenador {
 		this.id = id;
 		this.nombre = nombre;
 		this.genero= genero;
-
 	}
 	
-
 	public Entrenador() {
 			this.id = 0;
 	}

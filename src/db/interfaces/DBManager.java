@@ -25,5 +25,7 @@ public interface DBManager {
 
 	boolean addImagenProducto(Pokemon pokemon);
 
+	ArrayList<Pokemon> getPokemonByOrder(int offset, int limit);
+
 
 }

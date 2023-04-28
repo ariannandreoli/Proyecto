@@ -6,10 +6,10 @@ public class Pokemon {
 	private int nivel;
 	private String habilidad;
 	private String genero;
-	private int rutaP;
+	private String rutaP;
 	
 	
-	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero, int rutaP) {
+	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero, String rutaP) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -70,12 +70,12 @@ public class Pokemon {
 	}
 
 
-	public int getRutaP() {
+	public String getRutaP() {
 		return rutaP;
 	}
 
 
-	public void setRutaP(int rutaP) {
+	public void setRutaP(String rutaP) {
 		this.rutaP = rutaP;
 	}
 

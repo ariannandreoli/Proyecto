@@ -16,6 +16,7 @@ public class Factory {
 	private final String FICHERO_NOMBRES = "./db/nombres.csv";
 	private static int id = 1;
 	private String[] nombres;
+	private final String[] GENEROS = {"F", "M"};
 	
 	public Factory() {
 		nombres = readFile(FICHERO_NOMBRES);
@@ -41,7 +42,7 @@ public class Factory {
 		Entrenador entrenador = new Entrenador();	
 		String nombre = nombres[randomInt(nombres.length)];
 		entrenador.setNombre(nombre);
-		entrenador.setGenero("M");		//como meter el genero aleatorio tambien? si tiene longitudes diferentes sirve?
+		entrenador.setGenero(GENEROS[randomInt(GENEROS.length)]);
 		id++;
 		return entrenador;
 	}

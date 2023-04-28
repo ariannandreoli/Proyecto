@@ -25,7 +25,8 @@ public class Main {
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
 	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokedex", "Consultar Pokedex", "Capturar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
-	private static final String[] MENU_ACTUALIZAR_POKEDEX = {"Salir","Add Pokemon", "Actualizar Pokedex"};
+	private static final String[] MENU_ACTUALIZAR_POKEDEX = {"Salir","Add Pokemon", "Delete Pokemon", "Añadir imagen"};
+	private static final String[] MENU_CONSULTAR_POKEDEX = {"Salir","Ver Pokemon", "Buscar Pokemon"};
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -77,9 +78,39 @@ public class Main {
 	}
 
 	private static void consultarPokedex() {
-		
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_CONSULTAR_POKEDEX);
+			switch(respuesta) {
+				case 1 -> verPokemons();
+				case 2 -> buscarPokemonByNombre();
+			}
+		} while(respuesta != 0);
 	}
 	
+	
+	private static Object buscarPokemonByNombre() {
+		return null;
+		//TODO permitir modificar la información del pedido incluyendo asignar empleado y cambiar el estado
+	}
+
+	private static void verPokemons() {
+		String respuesta = "";
+		int offset = 0;
+		int limit = 20;
+		int size = limit;
+		do {
+			System.out.println("Mostrando del " + offset + " al " + (offset + limit));
+			ArrayList<Pokemon>pokemons = dbman.getPokemonByOrder(offset, limit);
+			size = pokemons.size();
+			for (int i = 0; i < size; i++) {
+				System.out.println(pokemons.get(i));
+			}
+			respuesta = askForText("Pulse Enter para continuar o 0 para salir");
+			offset += limit;
+		} while(respuesta.equals("") || size < limit);
+	}
+
 	private static void actualizarPokedex() {
 		System.out.println("Actualizando Pokedex");
 			int respuesta;
@@ -88,7 +119,7 @@ public class Main {
 				switch(respuesta) {
 					case 1 -> menuAddPokemon();
 					case 2 -> menuDeletePokemon();
-					case 3 -> menuAddImagenPokemon();
+					case 3 -> menuAddImagenPokemon();		//vamos a hacer esto?
 				}
 			} while(respuesta != 0);
 		}
@@ -157,15 +188,10 @@ public class Main {
 		//Categoria categoria = selectCategoria();
 		String nombre = askForText("Indique el nombre del pokemon:");
 		//int id,String nombre, int nivel, String habilidad, String genero, int rutaP
-		Pokemon pokemon = new Pokemon (-1, nombre, 0 , "" , "" , 0);		//hay que agregar los verdaderos valores del constructor
+		Pokemon pokemon = new Pokemon (-1, nombre, 0 , "" , "" , "");		//hay que agregar los verdaderos valores del constructor
 		dbman.addPokemon(pokemon);
 	}
 	
-
-	private static Object menuActualizarDescripcion() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	private static void menuRegistro() {
 		String nombre = askForText("Indique su nombre:");

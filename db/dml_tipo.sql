@@ -1,0 +1,17 @@
+INSERT INTO Tipo ( Nombre) VALUES
+("Agua"),                           
+("Fuego"),                          
+("Electrico"),                      
+("Normal"),                         
+("Tierra"),  
+("Dragon"),                         
+("Volador"),                        
+("Hielo"),                          
+("Lucha"),                          
+("Bicho"),                          
+("Psiquico"),                       
+("Fantasma"),                       
+("Veneno"),                         
+("Planta"),                         
+("Roca"),                               
+("Acero");  
