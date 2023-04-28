@@ -9,7 +9,7 @@ public class Pokemon {
 	private int rutaP;
 	
 	
-	public Pokemon (int id,String nombre, int nivel, String habilidad, String genero, int rutaP) {
+	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero, int rutaP) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -79,11 +79,27 @@ public class Pokemon {
 		this.rutaP = rutaP;
 	}
 
+	/*public void setImagen(byte[] imagen) {
+		this.imagen = imagen;
+	}*/
 
 	@Override
 	public String toString() {
 		return "Pokemon [id=" + id + ", nombre=" + nombre + ", nivel=" + nivel + ", habilidad=" + habilidad
 				+ ", genero=" + genero + ", rutaP=" + rutaP + "]";
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pokemon other = (Pokemon) obj;
+		return id == other.id;
+	}
+
 
 }

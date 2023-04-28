@@ -33,4 +33,11 @@ public class Pokedex {
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
+
+	@Override
+	public String toString() {
+		return "Pokedex [id=" + id + ", idEntrenador=" + idEntrenador + ", descripcion=" + descripcion + "]";
+	}
+	
+
 }

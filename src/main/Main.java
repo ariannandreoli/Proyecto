@@ -1,6 +1,10 @@
 package main;		//lo relacionado con la interfaz 
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -9,9 +13,8 @@ import java.util.logging.Logger;
 import db.interfaces.DBManager;
 import db.jdbc.JDBCManager;
 import logging.MyLogger;
-import pojo.Categoria;
 import pojo.Entrenador;
-import pojo.Producto;
+import pojo.Pokemon;
 
 public class Main {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -85,73 +88,81 @@ public class Main {
 				switch(respuesta) {
 					case 1 -> menuAddPokemon();
 					case 2 -> menuDeletePokemon();
-					case 3 -> menuUpdatePokemon();
-					case 4 -> menuAddImagenPokemon();
+					case 3 -> menuAddImagenPokemon();
 				}
 			} while(respuesta != 0);
 		}
 
-	private static void actualizarMenu() {
-		System.out.println("Menú Empleado");
-		int respuesta;
-		do {
-			respuesta = showMenu(MENU_ACTUALIAR_MENU);
-			switch(respuesta) {
-				case 1 -> menuAddProducto();
-				case 2 -> menuDeleteProducto();
-				case 3 -> menuUpdateProducto();
-				case 4 -> menuAddImagenProducto();
-			}
-		} while(respuesta != 0);
-	}
 
-	private static void menuUpdateProducto() {
-		Categoria categoria = selectCategoria();
-		ArrayList<Producto> productos = dbman.getProductosByCategoria(categoria);
-		Producto producto = selectProducto(productos);
-		if (producto != null) {
-			System.out.println("El nombre actual del producto es " + producto.getNombre());
-			String nuevoNombre = askForText("Indique el nuevo nombre del producto:");
-			if(!nuevoNombre.equals("")) {
-				producto.setNombre(nuevoNombre);
-			}
-			System.out.println("El precio actual del producto es " + producto.getPrecio());
-			float nuevoPrecio = askForFloat("Indique el nuevo precio del producto:");
-			if(nuevoPrecio != 0) {
-				producto.setPrecio(nuevoPrecio);
-			}
-			dbman.updateProducto(producto);
-		}
-	}
 
-	private static void menuDeleteProducto() {
-		Categoria categoria = selectCategoria();
-		ArrayList<Producto> productos = dbman.getProductosByCategoria(categoria);
-		Producto producto = selectProducto(productos);
-		int result = dbman.deleteProducto(producto);
+		private static Object menuAddImagenPokemon() {
+		/*//Categoria categoria = selectCategoria();
+		ArrayList<Pokemon> pokemons = dbman.getPokemonByNombre();
+		Pokemon pokemon = selectPokemon(pokemons);
+		System.out.println("Indique el nombre del archivo:");
+		String ruta = PATH_IMAGES;
+		try {
+			ruta += reader.readLine();
+			LOGGER.info(ruta);
+			byte[] imagen = readFile(ruta);
+			//TODO Error si la imagen es null
+			pokemon.setImagen(imagen);
+			boolean exito = dbman.addImagenProducto(pokemon);
+			if (exito) {
+				System.out.println("La imagen se ha añadido con éxito");
+			} else {
+				System.out.println("Ha habido un error al añadir la imagen");
+			}
+		} catch (IOException e) {
+			LOGGER.warning("Error al añadir imagen " + ruta + "\n" + e.toString());
+			System.out.println("Ha habido un error al añadir la imagen");
+		}*/
+			return null;	
+	}
+	
+	private static byte[] readFile(String file) {
+        ByteArrayOutputStream bos = null;
+        try {
+            File f = new File(file);
+            try (FileInputStream fis = new FileInputStream(f)) {
+				byte[] buffer = new byte[1024];
+				bos = new ByteArrayOutputStream();
+				for (int len; (len = fis.read(buffer)) != -1;) {
+				    bos.write(buffer, 0, len);
+				}
+			}
+        } catch (FileNotFoundException e) {
+        	LOGGER.severe("Nombre de fichero erroneo");
+        } catch (IOException e) {
+        	LOGGER.severe("Error al leer la imagen " + file + "\n" + e.getMessage());
+        }
+        return bos != null ? bos.toByteArray() : null;
+    }
+	
+
+	private static void menuDeletePokemon() {
+		//Categoria categoria = selectCategoria();
+		ArrayList<Pokemon> pokemons = dbman.getPokemonByNombre();
+		Pokemon pokemon = selectPokemon(pokemons);
+		int result = dbman.deletePokemon(pokemon);
 		if(result == 1) {
-			System.out.println("El producto '" + producto.getNombre() + "' se ha eliminado con éxito");
+			System.out.println("El pokemon '" + pokemon.getNombre() + "' se ha eliminado con éxito");
 		} else {
-			System.out.println("No se ha podido eliminar el producto '" + producto + "'");
-			LOGGER.warning("No se ha podido eliminar: " + producto);
+			System.out.println("No se ha podido eliminar el pokemon '" + pokemon + "'");
+			LOGGER.warning("No se ha podido eliminar: " + pokemon);
 		}
 	}
 
-	private static void menuAddProducto() {
-		Categoria categoria = selectCategoria();
-		String nombre = askForText("Indique el nombre del producto:");
-		float precio = askForFloat("Indique el precio del producto:");
-		Producto producto = new Producto(-1, nombre, precio, categoria, null);
-		dbman.addProducto(producto);
+	private static void menuAddPokemon() {
+		//Categoria categoria = selectCategoria();
+		String nombre = askForText("Indique el nombre del pokemon:");
+		//int id,String nombre, int nivel, String habilidad, String genero, int rutaP
+		Pokemon pokemon = new Pokemon (-1, nombre, 0 , "" , "" , 0);		//hay que agregar los verdaderos valores del constructor
+		dbman.addPokemon(pokemon);
 	}
 	
 
 	private static Object menuActualizarDescripcion() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	private static Object menuAddPokemon() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -212,6 +223,19 @@ public class Main {
 	private static Object localizarPokemon() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	private static Pokemon selectPokemon(ArrayList<Pokemon> pokemons) {
+		String[] opciones = new String[pokemons.size() + 1];
+		opciones[0] = "Cancelar";
+		for(int i = 0; i < pokemons.size(); i++) {
+			opciones[i + 1] = pokemons.get(i).getNombre();
+		}
+		int numPokemon = showMenu(opciones);
+		if(numPokemon == 0) {
+			return null;
+		}
+		return pokemons.get(numPokemon - 1);
 	}
 
 	private static float askForFloat(String text) {

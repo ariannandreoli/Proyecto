@@ -2,6 +2,7 @@ package db.interfaces;
 
 import java.util.ArrayList;
 import pojo.Entrenador;
+import pojo.Pokemon;
 
 
 public interface DBManager {
@@ -15,4 +16,14 @@ public interface DBManager {
 	ArrayList<Entrenador> getEntrenador();
 
 	boolean addEntrenador(Entrenador entrenador);
+
+	ArrayList<Pokemon> getPokemonByNombre();
+	
+	int deletePokemon(Pokemon producto);
+
+	void addPokemon(Pokemon pokemon);
+
+	boolean addImagenProducto(Pokemon pokemon);
+
+
 }

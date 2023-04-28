@@ -25,5 +25,11 @@ public class Tipo {
 		this.nombre = nombre;
 	}
 
+	@Override
+	public String toString() {
+		return "Tipo [id=" + id + ", nombre=" + nombre + "]";
+	}
+	
+
 }
 

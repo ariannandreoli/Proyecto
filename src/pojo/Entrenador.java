@@ -18,9 +18,6 @@ public class Entrenador {
 			this.id = 0;
 	}
 
-
-
-
 	public int getId() {
 		return id;
 	}

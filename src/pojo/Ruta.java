@@ -25,4 +25,11 @@ public class Ruta {
 		this.nombre = nombre;
 	}
 
+	@Override
+	public String toString() {
+		return "Ruta [id=" + id + ", nombre=" + nombre + "]";
+	}
+	
+	
+
 }
