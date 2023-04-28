@@ -41,7 +41,7 @@ public class Factory {
 		Entrenador entrenador = new Entrenador();	
 		String nombre = nombres[randomInt(nombres.length)];
 		entrenador.setNombre(nombre);
-		entrenador.setGenero("M");		//como meter el genero aleatorio tambien? 
+		entrenador.setGenero("M");		//como meter el genero aleatorio tambien? si tiene longitudes diferentes sirve?
 		id++;
 		return entrenador;
 	}

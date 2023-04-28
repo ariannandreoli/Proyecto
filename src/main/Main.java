@@ -9,7 +9,9 @@ import java.util.logging.Logger;
 import db.interfaces.DBManager;
 import db.jdbc.JDBCManager;
 import logging.MyLogger;
+import pojo.Categoria;
 import pojo.Entrenador;
+import pojo.Producto;
 
 public class Main {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -82,10 +84,66 @@ public class Main {
 				respuesta = showMenu(MENU_ACTUALIZAR_POKEDEX);
 				switch(respuesta) {
 					case 1 -> menuAddPokemon();
+					case 2 -> menuDeletePokemon();
+					case 3 -> menuUpdatePokemon();
+					case 4 -> menuAddImagenPokemon();
 				}
 			} while(respuesta != 0);
 		}
 
+	private static void actualizarMenu() {
+		System.out.println("Menú Empleado");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_ACTUALIAR_MENU);
+			switch(respuesta) {
+				case 1 -> menuAddProducto();
+				case 2 -> menuDeleteProducto();
+				case 3 -> menuUpdateProducto();
+				case 4 -> menuAddImagenProducto();
+			}
+		} while(respuesta != 0);
+	}
+
+	private static void menuUpdateProducto() {
+		Categoria categoria = selectCategoria();
+		ArrayList<Producto> productos = dbman.getProductosByCategoria(categoria);
+		Producto producto = selectProducto(productos);
+		if (producto != null) {
+			System.out.println("El nombre actual del producto es " + producto.getNombre());
+			String nuevoNombre = askForText("Indique el nuevo nombre del producto:");
+			if(!nuevoNombre.equals("")) {
+				producto.setNombre(nuevoNombre);
+			}
+			System.out.println("El precio actual del producto es " + producto.getPrecio());
+			float nuevoPrecio = askForFloat("Indique el nuevo precio del producto:");
+			if(nuevoPrecio != 0) {
+				producto.setPrecio(nuevoPrecio);
+			}
+			dbman.updateProducto(producto);
+		}
+	}
+
+	private static void menuDeleteProducto() {
+		Categoria categoria = selectCategoria();
+		ArrayList<Producto> productos = dbman.getProductosByCategoria(categoria);
+		Producto producto = selectProducto(productos);
+		int result = dbman.deleteProducto(producto);
+		if(result == 1) {
+			System.out.println("El producto '" + producto.getNombre() + "' se ha eliminado con éxito");
+		} else {
+			System.out.println("No se ha podido eliminar el producto '" + producto + "'");
+			LOGGER.warning("No se ha podido eliminar: " + producto);
+		}
+	}
+
+	private static void menuAddProducto() {
+		Categoria categoria = selectCategoria();
+		String nombre = askForText("Indique el nombre del producto:");
+		float precio = askForFloat("Indique el precio del producto:");
+		Producto producto = new Producto(-1, nombre, precio, categoria, null);
+		dbman.addProducto(producto);
+	}
 	
 
 	private static Object menuActualizarDescripcion() {
