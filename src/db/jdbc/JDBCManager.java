@@ -26,17 +26,23 @@ public class JDBCManager implements DBManager{
 	final String FICHERO_DML_POKEMON = "./db/dml_pokemon.sql";
 	final String FICHERO_DML_TIPO = "./db/dml_tipo.sql";
 	final String FICHERO_DML_CENTRO = "./db/dml_centro.sql";
+	final String FICHERO_DML_RUTA = "./db/dml_ruta.sql";
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador;";
-	private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre= ? ";
+	//private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre= ? ";
 	private static final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id=";
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
+	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Nombre = ?;";
+	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
+	
 	
 	private Statement stmt;
 	private PreparedStatement prepCount;
 	private PreparedStatement prepAddEntrenador;
+	private PreparedStatement prepAddPokemon;
+	private PreparedStatement prepDeletePokemon;
 	private Connection c;
 	
 	private final int NUM_ENTRENADOR = 1000;
@@ -64,6 +70,8 @@ public class JDBCManager implements DBManager{
 	private void initializeTables() {
 		try {
 			prepAddEntrenador= c.prepareStatement(PREP_ADD_ENTRENADOR);
+			prepDeletePokemon = c.prepareStatement(PREP_DELETE_POKEMON);
+			prepAddPokemon= c.prepareStatement(PREP_ADD_POKEMON);
 			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
@@ -87,7 +95,13 @@ public class JDBCManager implements DBManager{
 			else {
 				LOGGER.info("La tabla Centro ya estaba inicializada");
 			}
-			
+			if(countElementsFromTable("Ruta") == 0) {
+				stmt.executeUpdate(readFile(FICHERO_DML_RUTA));
+				LOGGER.info("Inicializada la tabla Ruta");
+			} 
+			else {
+				LOGGER.info("La tabla Centro ya estaba inicializada");
+			}
 			if(countElementsFromTable("Entrenador") == 0) {
 				for(int i = 0; i < NUM_ENTRENADOR; i++) {
 					//TODO Añadir los entrenadores en batch
@@ -107,7 +121,6 @@ public class JDBCManager implements DBManager{
 		LOGGER.info("Inicializada la base de datos");
 	}
 			
-
 
 	private void createTables() {
 		try {
@@ -203,18 +216,38 @@ public class JDBCManager implements DBManager{
 
 
 	@Override
-	public int deletePokemon(Pokemon producto) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int releasePokemon(Pokemon pokemon) {
+		int result = 0;
+		try {
+			prepDeletePokemon.setInt(1, pokemon.getId());
+			result = prepDeletePokemon.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(result == 1) {
+			LOGGER.info("Pokemon " + pokemon + " eliminado con éxito");
+		} else {
+			LOGGER.info("No existe el pokemon " + pokemon);
+		}
+		return result;
 	}
 
 
 	@Override
 	public void addPokemon(Pokemon pokemon) {
-		// TODO Auto-generated method stub
-		
+		try {
+			prepAddPokemon.setString(1, pokemon.getNombre());
+			prepAddPokemon.setInt(2, pokemon.getNivel());
+			prepAddPokemon.setString(3, pokemon.getHabilidad());
+			prepAddPokemon.setString(4, pokemon.getGenero());
+			prepAddPokemon.setString(5, pokemon.getRutaP());
+			prepAddPokemon.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
-
 
 	@Override
 	public boolean addImagenProducto(Pokemon pokemon) {
@@ -224,7 +257,7 @@ public class JDBCManager implements DBManager{
 
 	@Override
 	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit) {
-		String sql = "SELECT * FROM Pedidos ORDER BY Fecha LIMIT " + limit + " OFFSET " + offset + ";";
+		String sql = "SELECT * FROM Pokemon ORDER BY Id LIMIT " + limit + " OFFSET " + offset + ";";
 		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
 			ResultSet rs = stmt.executeQuery(sql);
@@ -244,6 +277,13 @@ public class JDBCManager implements DBManager{
 		}
 		return pokemons;
 		}
+
+
+	@Override
+	public Pokemon getPokemonNombre(String nombre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 }

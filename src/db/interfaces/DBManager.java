@@ -19,7 +19,9 @@ public interface DBManager {
 
 	ArrayList<Pokemon> getPokemonByNombre();
 	
-	int deletePokemon(Pokemon producto);
+	Pokemon getPokemonNombre (String nombre);
+	
+	int releasePokemon(Pokemon pokemon);
 
 	void addPokemon(Pokemon pokemon);
 

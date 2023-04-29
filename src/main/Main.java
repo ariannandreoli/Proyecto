@@ -23,10 +23,11 @@ public class Main {
 	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
 	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
-	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokedex", "Consultar Pokedex", "Capturar Pokemon"};
+	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokemones", "Consultar Pokemones", "Capturar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
-	private static final String[] MENU_ACTUALIZAR_POKEDEX = {"Salir","Add Pokemon", "Delete Pokemon", "Añadir imagen"};
-	private static final String[] MENU_CONSULTAR_POKEDEX = {"Salir","Ver Pokemon", "Buscar Pokemon"};
+	private static final String[] MENU_ACTUALIZAR_POKEMONES = {"Salir","Add Pokemon", "Delete Pokemon"};
+	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
+	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = null;
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -51,13 +52,14 @@ public class Main {
 		do {
 			respuesta = showMenu(MENU_ENTRENADOR);
 			switch(respuesta) {
-				case 1 -> menuRegistro();  //queremos que se registren y hagan login po que directamente entren sin verificacion? 
+				case 1 -> menuRegistro();  
 				case 2 -> menuLogin();
 			}
 		} while(respuesta != 0);
 	}
 	
 	private static void menuLogin() {
+		//verificar que el nombre YY el genero estan en la tabla para hacer el login
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
 		System.out.println("Estas loggeado");
@@ -65,33 +67,33 @@ public class Main {
 		do {
 			respuesta = showMenu(MENU_ENTRENADOR_LOGGED);
 			switch(respuesta) {
-				case 1 -> actualizarPokedex();  //queremos que se registren y hagan login po que directamente entren sin verificacion? 
-				case 2 -> consultarPokedex();
-				case 3 -> capturarPokemon();
+				case 1 -> menuActualizarPokemones();  
+				case 2 -> menuConsultarPokemones();
+				case 3 -> menuCapturarPokemon();
 			}
 		} while(respuesta != 0);
 	}
 		
-	private static Object capturarPokemon() {
+	private static Object menuCapturarPokemon() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private static void consultarPokedex() {
+	private static void menuConsultarPokemones() {
 		int respuesta;
 		do {
-			respuesta = showMenu(MENU_CONSULTAR_POKEDEX);
+			respuesta = showMenu(MENU_CONSULTAR_POKEMONES);
 			switch(respuesta) {
 				case 1 -> verPokemons();
-				case 2 -> buscarPokemonByNombre();
+				case 2 -> menuBuscarPokemonByNombre();
 			}
 		} while(respuesta != 0);
 	}
 	
-	
-	private static Object buscarPokemonByNombre() {
-		return null;
-		//TODO permitir modificar la información del pedido incluyendo asignar empleado y cambiar el estado
+	private static void menuBuscarPokemonByNombre() {
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
+		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		System.out.println(pokemon);
 	}
 
 	private static void verPokemons() {
@@ -111,45 +113,19 @@ public class Main {
 		} while(respuesta.equals("") || size < limit);
 	}
 
-	private static void actualizarPokedex() {
+	private static void menuActualizarPokemones() {
 		System.out.println("Actualizando Pokedex");
 			int respuesta;
 			do {
-				respuesta = showMenu(MENU_ACTUALIZAR_POKEDEX);
+				respuesta = showMenu(MENU_ACTUALIZAR_POKEMONES);
 				switch(respuesta) {
 					case 1 -> menuAddPokemon();
-					case 2 -> menuDeletePokemon();
-					case 3 -> menuAddImagenPokemon();		//vamos a hacer esto?
+					case 2 -> menuRealeasePokemon();
 				}
 			} while(respuesta != 0);
 		}
 
 
-
-		private static Object menuAddImagenPokemon() {
-		/*//Categoria categoria = selectCategoria();
-		ArrayList<Pokemon> pokemons = dbman.getPokemonByNombre();
-		Pokemon pokemon = selectPokemon(pokemons);
-		System.out.println("Indique el nombre del archivo:");
-		String ruta = PATH_IMAGES;
-		try {
-			ruta += reader.readLine();
-			LOGGER.info(ruta);
-			byte[] imagen = readFile(ruta);
-			//TODO Error si la imagen es null
-			pokemon.setImagen(imagen);
-			boolean exito = dbman.addImagenProducto(pokemon);
-			if (exito) {
-				System.out.println("La imagen se ha añadido con éxito");
-			} else {
-				System.out.println("Ha habido un error al añadir la imagen");
-			}
-		} catch (IOException e) {
-			LOGGER.warning("Error al añadir imagen " + ruta + "\n" + e.toString());
-			System.out.println("Ha habido un error al añadir la imagen");
-		}*/
-			return null;	
-	}
 	
 	private static byte[] readFile(String file) {
         ByteArrayOutputStream bos = null;
@@ -171,24 +147,26 @@ public class Main {
     }
 	
 
-	private static void menuDeletePokemon() {
-		//Categoria categoria = selectCategoria();
-		ArrayList<Pokemon> pokemons = dbman.getPokemonByNombre();
-		Pokemon pokemon = selectPokemon(pokemons);
-		int result = dbman.deletePokemon(pokemon);
+	private static void menuRealeasePokemon() {
+		ArrayList<Pokemon> pokemones = dbman.getPokemonByNombre(); //se sale con 0 solamente si no ve todos los pokemones
+		Pokemon pokemon = selectPokemon(pokemones);
+		int result = dbman.releasePokemon(pokemon);
 		if(result == 1) {
-			System.out.println("El pokemon '" + pokemon.getNombre() + "' se ha eliminado con éxito");
+			System.out.println("El pokemon '" + pokemon.getNombre() + "' se ha dejado ir con éxito");
 		} else {
-			System.out.println("No se ha podido eliminar el pokemon '" + pokemon + "'");
-			LOGGER.warning("No se ha podido eliminar: " + pokemon);
+			System.out.println("No se ha podido soltar el pokemon '" + pokemon + "'");
+			LOGGER.warning("No se ha podido soltar: " + pokemon);
 		}
 	}
 
 	private static void menuAddPokemon() {
-		//Categoria categoria = selectCategoria();
 		String nombre = askForText("Indique el nombre del pokemon:");
-		//int id,String nombre, int nivel, String habilidad, String genero, int rutaP
-		Pokemon pokemon = new Pokemon (-1, nombre, 0 , "" , "" , "");		//hay que agregar los verdaderos valores del constructor
+		int nivel = askForInt("Indique el nivel del pokemon:");
+		String habilidad = askForText("Indique la habilidad del pokemon:");
+		String genero = askForText("Indique el genero del pokemon:");
+		String rutaP = askForText("Indique la ruta del pokemon:");
+		//int id,String nombre, int nivel, String habilidad, String genero, String rutaP
+		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		//hay que agregar los verdaderos valores del constructor
 		dbman.addPokemon(pokemon);
 	}
 	
@@ -197,9 +175,9 @@ public class Main {
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
 		Entrenador entrenador = new Entrenador(0, nombre, genero);
+		System.out.println("¡Esta registrado, por favor haga login!");
 		dbman.addEntrenador(entrenador);
 	}
-	
 	
 	
 	private static void menuCentroPokemon() {
@@ -240,18 +218,41 @@ public class Main {
 	}
 
 
-	private static Object menuPokemonDelEntrenador() {		//hacer un get de los pokemones del entrenador y que muestre caso para cada pokemon que tiene
-		// TODO Auto-generated method stub					//Luego crear un menu donde seleccionando el pokemon se evolucione, cpnsulte nivel o salga
-		return null;
+	private static void menuPokemonDelEntrenador() {		//hacer un get de los pokemones del entrenador y que muestre caso para cada pokemon que tiene
+		System.out.println("Menú Entrenador dentro del Centro Pokemon");
+		int respuesta;
+		do {
+			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_INGRESADO);
+			switch(respuesta) {
+				case 1 -> evolucionaPokemon();
+				case 2 -> consutarMiNivel();
+			}
+		} while(respuesta != 0);
 	}
 
 
-	private static Object localizarPokemon() {
+	private static Object consutarMiNivel() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	private static void evolucionaPokemon() {
+		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
+		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		System.out.println("Se va a evolucionar a: " + pokemon);
+		//COMO HACEMOS ESTO?
+	}
+
+	private static void localizarPokemon() {
+		System.out.println("El pokemon que selecione sera localizado");
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
+		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		System.out.println("Se va a buscara a: " + pokemon);
+		//COMO HACEMOS ESTO?
+	}
 	
-	private static Pokemon selectPokemon(ArrayList<Pokemon> pokemons) {
+	private static Pokemon selectPokemon(ArrayList<Pokemon> pokemons) {		//no sirve porque dice que el arraylist esta vacio 
 		String[] opciones = new String[pokemons.size() + 1];
 		opciones[0] = "Cancelar";
 		for(int i = 0; i < pokemons.size(); i++) {
@@ -286,6 +287,18 @@ public class Main {
 			e.printStackTrace();
 		}
 		return resultado;
+	}
+	
+	private static Entrenador selectEntrenador() {
+		System.out.println("Elija el Entrenador del pokemon:");
+		ArrayList<Entrenador> entrenadores = dbman.getEntrenador();
+		String[] opciones = new String[entrenadores.size() + 1];
+		opciones[0] = "Cancelar";
+		for(int i = 0; i < entrenadores.size(); i++) {
+			opciones[i + 1] = entrenadores.get(i).getNombre();
+		}
+		int numEntrenador = showMenu(opciones);
+		return entrenadores.get(numEntrenador - 1);
 	}
 
 	private static int showMenu(String[] menu) {
