@@ -30,12 +30,14 @@ public class JDBCManager implements DBManager{
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador" ;
-	private final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre=";
-
+	private static final String STMT_GET_POKEMON_BY_ID = "SELECT * FROM Pokemon WHERE Id=''";
+	private static final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre'";
 	//private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre= ? ";
 	private static final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
+	
+	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
-	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Nombre = ?;";
+	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
 	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
 	
 	
@@ -231,20 +233,21 @@ public class JDBCManager implements DBManager{
 
 
 	@Override
-	public int releasePokemon(Pokemon pokemon) {			//Como hacemos esto? Hay que pasar a string
+	public int releasePokemon (int id) {		
 		int result = 0;
 		try {
-			prepDeletePokemon.setString(2, pokemon.getNombre());
+			prepDeletePokemon.setInt(1, id);
 			result = prepDeletePokemon.executeUpdate();
+			if(result == 1) {
+				LOGGER.info("Pokemon con id " + id + " eliminado con éxito");
+			} else {
+				LOGGER.info("No existe el pokemon con id " + id);
+			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if(result == 1) {
-			LOGGER.info("Pokemon " + pokemon + " eliminado con éxito");
-		} else {
-			LOGGER.info("No existe el pokemon " + pokemon);
-		}
+		
 		return result;
 		//return pokemon.getNombre();
 	}
@@ -294,12 +297,11 @@ public class JDBCManager implements DBManager{
 		return pokemons;
 		}
 
-
 	@Override
-	public ArrayList<Pokemon> getPokemonNombre(String nombrePokemon) {
-		ArrayList<Pokemon> pokemons = new ArrayList<>();
+	public Pokemon getPokemonById(int idPokemon) {
+		Pokemon pokemon = null;
 		try {
-			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_BY_NOMBRE + nombrePokemon);
+			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_BY_ID + idPokemon + "';");
 			if(rs.next()) {
 				int id = rs.getInt("Id");
 				String nombre = rs.getString("Nombre");
@@ -307,13 +309,13 @@ public class JDBCManager implements DBManager{
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
 				String rutaP = rs.getString("Ruta");
-				pokemons.add(new Pokemon(id, nombre, nivel, habilidad, genero, rutaP));
+				pokemon = new Pokemon(id, nombre, nivel, habilidad, genero, rutaP);
 			}			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return pokemons;
+		return pokemon;
 	}
 	
 	

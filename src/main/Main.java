@@ -149,13 +149,14 @@ public class Main {
 	
 
 	private static void menuRealeasePokemon() {
-		ArrayList<Pokemon> pokemones = dbman.getPokemonNombre(""); //que le paso en el string
-		Pokemon pokemon = selectPokemon(pokemones);
-		int result = dbman.releasePokemon(pokemon);
+		verPokemons();
+		int id = askForInt("Inserta el id del pokemon que quiere eliminar: ");
+		Pokemon pokemon = dbman.getPokemonById(id); 
+		int result = dbman.releasePokemon(id);
 		if(result == 1) {
-			System.out.println("El pokemon '" + pokemon.getNombre() + "' se ha dejado ir con éxito");
+			System.out.println("El pokemon con id:  '" + id + "' se ha dejado ir con éxito");
 		} else {
-			System.out.println("No se ha podido soltar el pokemon '" + pokemon + "'");
+			System.out.println("No se ha podido soltar el pokemon con id:  '" + id + "'");
 			LOGGER.warning("No se ha podido soltar: " + pokemon);
 		}
 	}

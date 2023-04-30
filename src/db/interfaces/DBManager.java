@@ -16,12 +16,14 @@ public interface DBManager {
 	ArrayList<Entrenador> getEntrenador();
 
 	boolean addEntrenador(Entrenador entrenador);
+	
+	Pokemon getPokemonById(int id);
 
-	ArrayList<Pokemon> getPokemonNombre(String nombre);
+	//ArrayList<Pokemon> getPokemonNombre(String nombre);
 	
 	Pokemon getPokemonByNombre (String nombre);
 	
-	int releasePokemon(Pokemon pokemon);
+	int releasePokemon(int id);
 
 	void addPokemon(Pokemon pokemon);
 
