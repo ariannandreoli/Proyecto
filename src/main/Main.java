@@ -1,4 +1,5 @@
 package main;		//lo relacionado con la interfaz 
+//QUITAR LA ENTIDAD DE POKEDEX
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -92,7 +93,7 @@ public class Main {
 	
 	private static void menuBuscarPokemonByNombre() {
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
-		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println(pokemon);
 	}
 
@@ -148,7 +149,7 @@ public class Main {
 	
 
 	private static void menuRealeasePokemon() {
-		ArrayList<Pokemon> pokemones = dbman.getPokemonByNombre(); //se sale con 0 solamente si no ve todos los pokemones
+		ArrayList<Pokemon> pokemones = dbman.getPokemonNombre(""); //que le paso en el string
 		Pokemon pokemon = selectPokemon(pokemones);
 		int result = dbman.releasePokemon(pokemon);
 		if(result == 1) {
@@ -165,7 +166,6 @@ public class Main {
 		String habilidad = askForText("Indique la habilidad del pokemon:");
 		String genero = askForText("Indique el genero del pokemon:");
 		String rutaP = askForText("Indique la ruta del pokemon:");
-		//int id,String nombre, int nivel, String habilidad, String genero, String rutaP
 		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		//hay que agregar los verdaderos valores del constructor
 		dbman.addPokemon(pokemon);
 	}
@@ -174,7 +174,7 @@ public class Main {
 	private static void menuRegistro() {
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
-		Entrenador entrenador = new Entrenador(0, nombre, genero);
+		Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
 		System.out.println("¡Esta registrado, por favor haga login!");
 		dbman.addEntrenador(entrenador);
 	}
@@ -187,11 +187,10 @@ public class Main {
 			respuesta = showMenu(MENU_CENTRO_POKEMON);
 			switch(respuesta) {
 				case 1 -> localizarPokemon();
-				case 2 -> gestionarEntrenador();
+				case 2 -> gestionarEntrenador();		//hacer un login desde el centro
 			}
 		} while(respuesta != 0);
 	}
-	
 	
 	
 	private static void gestionarEntrenador() {
@@ -236,10 +235,10 @@ public class Main {
 		return null;
 	}
 
-	private static void evolucionaPokemon() {
+	private static void evolucionaPokemon() {		//para esto hacer un update del pokemon que tienes
 		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
-		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println("Se va a evolucionar a: " + pokemon);
 		//COMO HACEMOS ESTO?
 	}
@@ -247,7 +246,7 @@ public class Main {
 	private static void localizarPokemon() {
 		System.out.println("El pokemon que selecione sera localizado");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
-		Pokemon pokemon = dbman.getPokemonNombre(nombrePokemon);
+		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println("Se va a buscara a: " + pokemon);
 		//COMO HACEMOS ESTO?
 	}

@@ -36,18 +36,13 @@ FOREIGN KEY (IdEntrenador) REFERENCES Entrenador,
 FOREIGN KEY (IdCentro) REFERENCES Centro,
 PRIMARY KEY (IdEntrenador, IdCentro));
 
-CREATE TABLE IF NOT EXISTS Pokedex (
-Id INTEGER UNIQUE NOT NULL PRIMARY KEY, 
-IdEntrenador INTEGER REFERENCES Entrenador
-/*Descripcion TEXT*/
-);
-
-CREATE TABLE IF NOT EXISTS "Pokedex_Pokemon" (
+CREATE TABLE IF NOT EXISTS "Entrenador_Pokemon" (
 IdPokemon INTEGER,
-IdPokedex INTEGER,
+IdEntrenador INTEGER,
+Cantidad INTEGER,
 FOREIGN KEY (IdPokemon) REFERENCES Pokemon,
-FOREIGN KEY (IdPokedex) REFERENCES Pokedex,
-PRIMARY KEY (IdPokemon, IdPokedex)
+FOREIGN KEY (IdEntrenador) REFERENCES Entrenador,
+PRIMARY KEY (IdPokemon, IdEntrenador)
 );
 
 CREATE TABLE IF NOT EXISTS Ruta (

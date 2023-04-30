@@ -17,9 +17,9 @@ public interface DBManager {
 
 	boolean addEntrenador(Entrenador entrenador);
 
-	ArrayList<Pokemon> getPokemonByNombre();
+	ArrayList<Pokemon> getPokemonNombre(String nombre);
 	
-	Pokemon getPokemonNombre (String nombre);
+	Pokemon getPokemonByNombre (String nombre);
 	
 	int releasePokemon(Pokemon pokemon);
 
