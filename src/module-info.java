@@ -5,7 +5,8 @@
  * @author arianna
  *
  */
-module Proyecto {
+open module Proyecto {
 	requires java.logging;
 	requires java.sql;
+	requires jakarta.persistence;
 }

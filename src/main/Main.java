@@ -99,7 +99,7 @@ public class Main {
 		System.out.println(pokemon);
 	}
 
-	private static void verPokemons() {		//NO ME DEJA SALIR SI SELECCIONO 0
+	private static void verPokemons() {		
 		String respuesta = "";
 		int offset = 0;
 		int limit = 20;
@@ -114,7 +114,7 @@ public class Main {
 			}
 			respuesta = askForText("Pulse Enter para continuar o 0 para salir");
 			offset += limit;
-		} while(respuesta.equals("") || size < limit);
+		} while(respuesta.equals("") && size == limit);
 	}
 
 	private static void menuActualizarPokemones() {

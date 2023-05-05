@@ -32,7 +32,7 @@ public class JDBCManager implements DBManager{
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador" ;
 	private static final String STMT_GET_POKEMON_BY_ID = "SELECT * FROM Pokemon WHERE Id=''";
-	private static final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre'";
+	private static final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre ='";
 	//private static final String STMT_GET_ENTRENADOR_BY_NOMBRE = "SELECT * FROM Entrenador WHERE Nombre= ? ";
 	private static final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
 	
@@ -289,7 +289,7 @@ public class JDBCManager implements DBManager{
 
 	@Override
 	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit, int idLimit) {
-		String sql = "SELECT * FROM Pokemon WHERE Id < " + idLimit + " ORDER BY Id DESC LIMIT " + limit + " OFFSET " + offset + ";";		ArrayList<Pokemon> pokemons = new ArrayList<>();
+		String sql = "SELECT * FROM Pokemon WHERE Id < " + idLimit + " ORDER BY Id ASC LIMIT " + limit + " OFFSET " + offset + ";";		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
