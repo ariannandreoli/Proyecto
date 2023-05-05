@@ -19,7 +19,7 @@ public interface DBManager {
 	
 	Pokemon getPokemonById(int id);
 
-	//ArrayList<Pokemon> getPokemonNombre(String nombre);
+	ArrayList<Pokemon> getListPokemonByNombre(String nombre);
 	
 	Pokemon getPokemonByNombre (String nombre);
 	
@@ -29,7 +29,11 @@ public interface DBManager {
 
 	boolean addImagenProducto(Pokemon pokemon);
 
-	ArrayList<Pokemon> getPokemonByOrder(int offset, int limit);
+	ArrayList<Pokemon> getPokemonByOrder(int inicio, int fin, int idLimit);
+
+	void evolvePokemon(Pokemon pokemon);
+
+	void levelUp(Pokemon pokemon);
 
 
 }

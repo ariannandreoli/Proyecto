@@ -27,6 +27,7 @@ public class JDBCManager implements DBManager{
 	final String FICHERO_DML_TIPO = "./db/dml_tipo.sql";
 	final String FICHERO_DML_CENTRO = "./db/dml_centro.sql";
 	final String FICHERO_DML_RUTA = "./db/dml_ruta.sql";
+	final String FICHERO_DML_POKEMON_TIPO = "./db/dml_pokemonTipo.sql";
 	
 	final String STMT_COUNT = "SELECT count(*) FROM ";
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador" ;
@@ -39,13 +40,16 @@ public class JDBCManager implements DBManager{
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
 	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
-	
+	private final String PREP_EVOLVE_POKEMON = "UPDATE Pokemon SET Nombre=?, Nivel=?, Habilidad=?, Genero=? WHERE Id=?;";
+	private final String PREP_LEVEL_UP_POKEMON = "UPDATE Pokemon SET Nivel=? WHERE Id=?;";
 	
 	private Statement stmt;
 	private PreparedStatement prepCount;
 	private PreparedStatement prepAddEntrenador;
 	private PreparedStatement prepAddPokemon;
 	private PreparedStatement prepDeletePokemon;
+	private PreparedStatement prepEvolvePokemon;
+	private PreparedStatement prepLevelUpPokemon;
 	private Connection c;
 	
 	private final int NUM_ENTRENADOR = 1000;
@@ -75,6 +79,8 @@ public class JDBCManager implements DBManager{
 			prepAddEntrenador= c.prepareStatement(PREP_ADD_ENTRENADOR);
 			prepDeletePokemon = c.prepareStatement(PREP_DELETE_POKEMON);
 			prepAddPokemon= c.prepareStatement(PREP_ADD_POKEMON);
+			prepEvolvePokemon = c.prepareStatement(PREP_EVOLVE_POKEMON);
+			prepLevelUpPokemon= c.prepareStatement(PREP_LEVEL_UP_POKEMON);
 			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
@@ -103,7 +109,14 @@ public class JDBCManager implements DBManager{
 				LOGGER.info("Inicializada la tabla Ruta");
 			} 
 			else {
-				LOGGER.info("La tabla Centro ya estaba inicializada");
+				LOGGER.info("La tabla Ruta ya estaba inicializada");
+			}
+			if(countElementsFromTable("Pokemon_Tipo") == 0) {
+				stmt.executeUpdate(readFile(FICHERO_DML_POKEMON_TIPO));
+				LOGGER.info("Inicializada la tabla Pokemon_Tipo");
+			} 
+			else {
+				LOGGER.info("La tabla Pokemon_Tipo ya estaba inicializada");
 			}
 			if(countElementsFromTable("Entrenador") == 0) {
 				for(int i = 0; i < NUM_ENTRENADOR; i++) {
@@ -221,7 +234,7 @@ public class JDBCManager implements DBManager{
 				int nivel = rs.getInt("Nivel");
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
-				String rutaP = rs.getString("Ruta");
+				int rutaP = rs.getInt("Ruta");
 				pokemon = new Pokemon(id, nombre, nivel, habilidad, genero, rutaP);
 			}			
 		} catch (SQLException e) {
@@ -260,7 +273,7 @@ public class JDBCManager implements DBManager{
 			prepAddPokemon.setInt(2, pokemon.getNivel());
 			prepAddPokemon.setString(3, pokemon.getHabilidad());
 			prepAddPokemon.setString(4, pokemon.getGenero());
-			prepAddPokemon.setString(5, pokemon.getRutaP());
+			prepAddPokemon.setInt(5, pokemon.getRutaP());
 			prepAddPokemon.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -275,9 +288,8 @@ public class JDBCManager implements DBManager{
 	}
 
 	@Override
-	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit) {
-		String sql = "SELECT * FROM Pokemon ORDER BY Id LIMIT " + limit + " OFFSET " + offset + ";";
-		ArrayList<Pokemon> pokemons = new ArrayList<>();
+	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit, int idLimit) {
+		String sql = "SELECT * FROM Pokemon WHERE Id < " + idLimit + " ORDER BY Id DESC LIMIT " + limit + " OFFSET " + offset + ";";		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {
@@ -286,7 +298,7 @@ public class JDBCManager implements DBManager{
 				int nivel = rs.getInt("Nivel");
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
-				String rutaP = rs.getString("RutaP");
+				int rutaP = rs.getInt("RutaP");
 				Pokemon pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, rutaP);
 				pokemons.add(pokemon);
 			}
@@ -308,7 +320,7 @@ public class JDBCManager implements DBManager{
 				int nivel = rs.getInt("Nivel");
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
-				String rutaP = rs.getString("Ruta");
+				int rutaP = rs.getInt("Ruta");
 				pokemon = new Pokemon(id, nombre, nivel, habilidad, genero, rutaP);
 			}			
 		} catch (SQLException e) {
@@ -317,6 +329,45 @@ public class JDBCManager implements DBManager{
 		}
 		return pokemon;
 	}
+	
+	
+	@Override
+	public void evolvePokemon (Pokemon pokemon) {
+		try {
+			prepEvolvePokemon.setString(1, pokemon.getNombre());
+			prepEvolvePokemon.setInt(2, pokemon.getNivel());
+			prepEvolvePokemon.setString(3, pokemon.getHabilidad());
+			prepEvolvePokemon.setString(4, pokemon.getGenero());
+			//quiero la ruta se mantenga igual
+			prepEvolvePokemon.setInt(5, pokemon.getId());
+			prepEvolvePokemon.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	@Override
+	public ArrayList<Pokemon> getListPokemonByNombre(String nombre) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void levelUp(Pokemon pokemon) {
+		LOGGER.info(pokemon.toString());
+		try {
+			prepLevelUpPokemon.setInt(1, pokemon.getNivel());
+			prepLevelUpPokemon.setInt(2, pokemon.getId());
+			prepLevelUpPokemon.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	
 	
 }

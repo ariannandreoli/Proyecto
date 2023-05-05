@@ -26,9 +26,11 @@ public class Main {
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
 	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokemones", "Consultar Pokemones", "Capturar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
+	private static final String[] MENU_GESTIONAR_ENTRENADOR_ID= {"Salir", "Mostrar Pokemon del entrenador"};
 	private static final String[] MENU_ACTUALIZAR_POKEMONES = {"Salir","Add Pokemon", "Delete Pokemon"};
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
-	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = null;
+	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon"};
+	
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -60,7 +62,7 @@ public class Main {
 	}
 	
 	private static void menuLogin() {
-		//verificar que el nombre YY el genero estan en la tabla para hacer el login
+		//verificar que el nombre Y el genero estan en la tabla para hacer el login
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
 		System.out.println("Estas loggeado");
@@ -92,19 +94,20 @@ public class Main {
 	}
 	
 	private static void menuBuscarPokemonByNombre() {
-		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//ME DEVUELVE NULL SI ELIJO UN NOMBRE VALIDO 
 		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println(pokemon);
 	}
 
-	private static void verPokemons() {
+	private static void verPokemons() {		//NO ME DEJA SALIR SI SELECCIONO 0
 		String respuesta = "";
 		int offset = 0;
 		int limit = 20;
 		int size = limit;
+		int idLimit = Integer.MAX_VALUE;
 		do {
 			System.out.println("Mostrando del " + offset + " al " + (offset + limit));
-			ArrayList<Pokemon>pokemons = dbman.getPokemonByOrder(offset, limit);
+			ArrayList<Pokemon>pokemons = dbman.getPokemonByOrder(offset, limit, idLimit);
 			size = pokemons.size();
 			for (int i = 0; i < size; i++) {
 				System.out.println(pokemons.get(i));
@@ -126,29 +129,9 @@ public class Main {
 			} while(respuesta != 0);
 		}
 
-
-	
-	private static byte[] readFile(String file) {
-        ByteArrayOutputStream bos = null;
-        try {
-            File f = new File(file);
-            try (FileInputStream fis = new FileInputStream(f)) {
-				byte[] buffer = new byte[1024];
-				bos = new ByteArrayOutputStream();
-				for (int len; (len = fis.read(buffer)) != -1;) {
-				    bos.write(buffer, 0, len);
-				}
-			}
-        } catch (FileNotFoundException e) {
-        	LOGGER.severe("Nombre de fichero erroneo");
-        } catch (IOException e) {
-        	LOGGER.severe("Error al leer la imagen " + file + "\n" + e.getMessage());
-        }
-        return bos != null ? bos.toByteArray() : null;
-    }
 	
 
-	private static void menuRealeasePokemon() {
+	private static void menuRealeasePokemon() {				//elimina un pokemon de la tabla PERO DA UN ERROR BIEN RARO
 		verPokemons();
 		int id = askForInt("Inserta el id del pokemon que quiere eliminar: ");
 		Pokemon pokemon = dbman.getPokemonById(id); 
@@ -157,16 +140,16 @@ public class Main {
 			System.out.println("El pokemon con id:  '" + id + "' se ha dejado ir con éxito");
 		} else {
 			System.out.println("No se ha podido soltar el pokemon con id:  '" + id + "'");
-			LOGGER.warning("No se ha podido soltar: " + pokemon);
+			LOGGER.warning("No se ha podido soltar el pokemon con id: " + id);
 		}
 	}
 
-	private static void menuAddPokemon() {
+	private static void menuAddPokemon() {					//agrega un pokemon a la tabla
 		String nombre = askForText("Indique el nombre del pokemon:");
 		int nivel = askForInt("Indique el nivel del pokemon:");
 		String habilidad = askForText("Indique la habilidad del pokemon:");
 		String genero = askForText("Indique el genero del pokemon:");
-		String rutaP = askForText("Indique la ruta del pokemon:");
+		int rutaP = askForInt("Indique la ruta del pokemon:");
 		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		//hay que agregar los verdaderos valores del constructor
 		dbman.addPokemon(pokemon);
 	}
@@ -205,52 +188,87 @@ public class Main {
 		} while(respuesta != 0);
 	}
 
-		
+
 	private static void menuIdEntrenador() {
 		System.out.println("Menú Entrenador dentro del Centro Pokemon");
+		System.out.println("Va a tener que seleccionar el id para loggearse: ");
 		int respuesta;
 		do {
-			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR);
+			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_ID);
 			switch(respuesta) {
 				case 1 -> menuPokemonDelEntrenador();
 			}
 		} while(respuesta != 0);
 	}
 
-
 	private static void menuPokemonDelEntrenador() {		//hacer un get de los pokemones del entrenador y que muestre caso para cada pokemon que tiene
-		System.out.println("Menú Entrenador dentro del Centro Pokemon");
+		System.out.println("Menú Entrenador dentro del Centro Pokemon, se loggeo con su id: ");
 		int respuesta;
 		do {
 			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_INGRESADO);
 			switch(respuesta) {
-				case 1 -> evolucionaPokemon();
-				case 2 -> consutarMiNivel();
+				case 1 -> evolucionarPokemon();
+				case 2 -> subirMiNivel();
 			}
 		} while(respuesta != 0);
 	}
 
 
-	private static Object consutarMiNivel() {
-		// TODO Auto-generated method stub
-		return null;
+	private static void subirMiNivel() {		//DA PROBLEMAS
+		verPokemons();
+		int id = askForInt("Inserta el id del pokemon que quiere subir de nivel: ");
+		Pokemon pokemon = dbman.getPokemonById(id);
+		if (pokemon != null)
+			System.out.println("El pokemon actual es " + pokemon.getNombre());
+			int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon :");
+			if(nuevoNivel != 0) {
+				pokemon.setNivel(nuevoNivel);
+			}
+			dbman.levelUp(pokemon);
+		}
+
+	private static void evolucionarPokemon() {		
+		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");
+		ArrayList<Pokemon> pokemons = dbman.getListPokemonByNombre(nombrePokemon); //que hago aqui 
+		Pokemon pokemon = selectPokemon(pokemons);
+		if (pokemon != null)
+			System.out.println("El pokemon actual es " + pokemon.getNombre());
+			String nuevoNombre = askForText("Indique la evolucion del pokemon :");
+		if(!nuevoNombre.equals("")) {
+			pokemon.setNombre(nuevoNombre);
+		}
+		System.out.println("El nivel actual del pokemon es " + pokemon.getNivel());	//deberia mantener el mismo nivel
+		int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon:");
+		if(nuevoNivel != 0) {
+			pokemon.setNivel(nuevoNivel);
+		}
+		System.out.println("La habilidad actual del pokemon es " + pokemon.getHabilidad());
+		String nuevaHabilidad = askForText("Indique la nueva habilidad del pokemon:");
+		if(!nuevaHabilidad.equals("")) {
+			pokemon.setHabilidad(nuevaHabilidad);
+		}
+		System.out.println("El genero actual del pokemon es " + pokemon.getGenero());
+		String nuevoGenero = askForText("Indique la nueva habilidad del pokemon:");
+		if(!nuevoGenero.equals("")) {
+			pokemon.setGenero(nuevoGenero);
+		}
+		System.out.println("La ruta actual del pokemon es " + pokemon.getRutaP() + " donde se encontrara la evolucion tambien."); //debe mantener la misma ruta
+
+		dbman.evolvePokemon(pokemon);
+		
 	}
 
-	private static void evolucionaPokemon() {		//para esto hacer un update del pokemon que tienes
+	private static void localizarPokemon() {
 		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
 		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println("Se va a evolucionar a: " + pokemon);
-		//COMO HACEMOS ESTO?
-	}
+		//ESTO NO TIENE SENTIDO PORQUE EL CENTRO NO PUEDE ACCEDER A LAS RUTAS
+		//QUE TAL SI LO PODEMOS SUBIR DE NIVEL AL POKEMON? 
 
-	private static void localizarPokemon() {
-		System.out.println("El pokemon que selecione sera localizado");
-		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
-		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
-		System.out.println("Se va a buscara a: " + pokemon);
-		//COMO HACEMOS ESTO?
 	}
+			
 	
 	private static Pokemon selectPokemon(ArrayList<Pokemon> pokemons) {		//no sirve porque dice que el arraylist esta vacio 
 		String[] opciones = new String[pokemons.size() + 1];
