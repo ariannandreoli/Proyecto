@@ -49,7 +49,7 @@ La sexta y ultima entidad es "Ruta" que tiene los atributos "Id" y "Nombre" que 
 
 Extraemos del diagrama entidad relacion las distintas entidades:
 
-![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/TABLAS_ER.jpg)
+![T_ER](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/T_ER.jpg)
 
 
 Utilizamos el modelo de entidad relación y lo pasamos a tablas de forma que cada entidad tendra su tabla propia y cada relación cumple con los requisitos según su tipo:
