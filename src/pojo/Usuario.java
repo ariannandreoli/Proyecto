@@ -35,6 +35,7 @@ public class Usuario implements Serializable{
 		this.nombre = nombre;
 		this.password = hash;
 		this.rol = rol;
+
 	}
 
 	public int getId() {
@@ -68,6 +69,7 @@ public class Usuario implements Serializable{
 	public void setRol(Rol rol) {
 		this.rol = rol;
 	}
+
 
 	@Override
 	public int hashCode() {

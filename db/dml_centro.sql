@@ -1,8 +1,8 @@
 INSERT INTO Centro (Trabajadores, Ciudad) VALUES
-("Joy 1", "Carmin"),
-("Joy 2,", "Azafran"),
-("Joy 3", "Azulona"),
-("Joy 4", "Verde"),
-("Joy 5", "Fuscia"),
-("Joy 6", "Canela"),
-("Joy 7", "Plateada");
+("JOY 1", "CARMIN"),
+("JOY 2,", "AZAFRAN"),
+("JOY 3", "AZULONA"),
+("JOY 4", "VERDE"),
+("JOY 5", "FUSCIA"),
+("JOY 6", "CANELA"),
+("JOY 7", "PLATEADA");
