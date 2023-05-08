@@ -5,15 +5,15 @@
 	<persistence-unit name="provider-pokemon" transaction-type="RESOURCE_LOCAL"> 
 		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
 		
-		<class>pojos.Usuario</class> 
-		<class>pojos.Rol</class> 
+		<class>pojo.Rol</class>
+    	<class>pojo.Usuario</class>
 		
 		<properties>
 			<!-- Connection properties -->
 			<property name="jakarta.persistence.jdbc.driver" value="org.sqlite.JDBC" /> 
-			<property name="jakarta.persistence.jdbc.url" value="jdbc:sqlite:./db/mundoPokemon.db" /> 
+			<property name="jakarta.persistence.jdbc.url" value="jdbc:sqlite:./db/pokemonWorldJPA.db" /> 
 			<!-- JPA creates and destroys the schema -->
-			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+			<property name="eclipselink.ddl-generation" value="create-tables" />
 		</properties> 
 	</persistence-unit>
 </persistence>

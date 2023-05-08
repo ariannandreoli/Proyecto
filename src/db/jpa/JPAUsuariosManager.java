@@ -26,8 +26,8 @@ public class JPAUsuariosManager implements UsuariosManager{
 		em.createNativeQuery("PRAGMA foreign_keys=ON").executeUpdate();
 		em.getTransaction().commit();
 		if (getRoles().size() == 0) {
-			addRol(new Rol("cliente"));
-			addRol(new Rol("empleado"));
+			addRol(new Rol("entrenador"));
+			addRol(new Rol("centro_pokemon"));
 		}
 	}
 
@@ -69,13 +69,13 @@ public class JPAUsuariosManager implements UsuariosManager{
 	}
 
 	@Override
-	public Usuario checkLogin(String email, String pass) {
+	public Usuario checkLogin(String nombre, String pass) {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(pass.getBytes());
 			byte[] hash = md.digest();
-			Query q = em.createNativeQuery("SELECT * FROM Usuarios WHERE email=? AND password=?", Usuario.class);
-			q.setParameter(1, email);
+			Query q = em.createNativeQuery("SELECT * FROM Usuarios WHERE nombre=? AND password=?", Usuario.class);
+			q.setParameter(1, nombre);
 			q.setParameter(2, hash);
 			List<Usuario> usuarios = q.getResultList();
 			if(usuarios.size() == 0) {

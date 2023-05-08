@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Tipo (
 Id INTEGER UNIQUE PRIMARY KEY,
 Nombre TEXT);
 
-CREATE TABLE IF NOT EXISTS "Pokemon _Tipo" (
+CREATE TABLE IF NOT EXISTS PokemonTipo (
 IdPokemon INTEGER,
 IdTipo INTEGER,
 FOREIGN KEY (IdTipo) REFERENCES Tipo,
@@ -29,14 +29,14 @@ Trabajadores TEXT,
 Ciudad TEXT
 );
 
-CREATE TABLE IF NOT EXISTS "Entrenador_Centro" (
+CREATE TABLE IF NOT EXISTS "Entrenador-Centro" (
 IdEntrenador INTEGER,
 IdCentro INTEGER,
 FOREIGN KEY (IdEntrenador) REFERENCES Entrenador,
 FOREIGN KEY (IdCentro) REFERENCES Centro,
 PRIMARY KEY (IdEntrenador, IdCentro));
 
-CREATE TABLE IF NOT EXISTS "Entrenador_Pokemon" (
+CREATE TABLE IF NOT EXISTS "Entrenador-Pokemon" (
 IdPokemon INTEGER,
 IdEntrenador INTEGER,
 Cantidad INTEGER,

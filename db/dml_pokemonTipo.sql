@@ -1,4 +1,4 @@
-INSERT INTO "Pokemon _Tipo" ( IdPokemon, IdTipo) VALUES
+INSERT INTO "PokemonTipo" ( IdPokemon, IdTipo) VALUES
 (1, 14),
 (1, 13),
 (2, 13),

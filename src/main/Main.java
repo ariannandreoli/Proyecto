@@ -8,21 +8,29 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import db.interfaces.DBManager;
+import db.interfaces.UsuariosManager;
 import db.jdbc.JDBCManager;
+import db.jpa.JPAUsuariosManager;
 import logging.MyLogger;
+import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.Pokemon;
+import pojo.Rol;
+import pojo.Usuario;
 
 public class Main {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	public static DBManager dbman;
+	private static UsuariosManager userman;
 	public static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-	private final static String[] MENU_PRINCIPAL = {"Salir", "Menú Entrenador", "Menú Centro Pokemon"};
-	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Localizar Pokemon", "Gestionar Entrenador"};
+	private final static String[] MENU_PRINCIPAL = {"Salir", "Login", "Registrarse"};
+	private final static String[] MENU_CENTRO_POKEMON = {"Salir", "Evolucionar Pokemon", "Gestionar Entrenador"};
 	private final static String[] MENU_ENTRENADOR = {"Salir", "Registrarse", "Log in"};
 	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokemones", "Consultar Pokemones", "Capturar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR = {"Salir", "Ingresar con ID"};
@@ -30,10 +38,12 @@ public class Main {
 	private static final String[] MENU_ACTUALIZAR_POKEMONES = {"Salir","Add Pokemon", "Delete Pokemon"};
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon"};
-	
+	private static Usuario usuario;
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
+		userman = new JPAUsuariosManager();
+		userman.connect();
 		dbman = new JDBCManager();
 		dbman.connect();
 		System.out.println("¡Bienvenido al mundo Pokemon!");
@@ -41,15 +51,58 @@ public class Main {
 		do {
 			respuesta = showMenu(MENU_PRINCIPAL);
 			switch(respuesta) {
-				case 1 -> menuEntrenador();
-				case 2 -> menuCentroPokemon();
+				case 1 -> login();			
+				case 2 -> registrarse();
 			}
 		} while(respuesta != 0);
 		System.out.println("¡Gracias!");
 		dbman.disconnect();
 	}
 	
-	private static void menuEntrenador() {
+	private static void login() {
+		String nombre = askForText("Indique su nombre:");
+		String password = askForText("Indique su contraseña:");
+		usuario = userman.checkLogin(nombre, password);
+		if (usuario == null) {
+			System.out.println("Nombre o contraseña incorrectos");
+		} else {
+			switch(usuario.getRol().getNombre()) {
+				case "entrenador" -> menuEntrenador();
+				case "centro_pokemon" -> menuCentroPokemon();
+			}
+		}
+	}
+	
+	private static void registrarse() {
+		try {
+			String nombre = askForText("Indique su nombre:");
+			String pass = askForText("Indique su contraseña:");
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(pass.getBytes());
+			byte[] hash = md.digest();
+			System.out.println(userman.getRoles());
+			int rolId = askForInt("Indique el id del rol:");
+			//TODO Asegurarse que el id es válido
+			Rol rol = userman.getRolById(rolId);
+			Usuario usuario = new Usuario(nombre, hash, rol);
+			rol.addUsuario(usuario);
+			userman.addUsuario(usuario);
+			if(rol.getNombre().equals("entrenador")) {
+				String genero = askForText("Indique su genero:");
+				Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
+				dbman.addEntrenador(entrenador);
+			} else {
+				String trabajador= askForText("Indique su nombre:");
+				String ciudad = askForText("Indique su ciudad:");
+				CentroPokemon centro = new CentroPokemon(usuario.getId(), trabajador, ciudad );
+				dbman.addCentro(centro);		
+			}
+		} catch(NoSuchAlgorithmException e) {
+			LOGGER.warning("Error en el registro\n" + e);
+		}
+	}
+	
+	/*private static void menuEntrenador() {
 		System.out.println("Menú Entrenador");
 		int respuesta;
 		do {
@@ -59,13 +112,18 @@ public class Main {
 				case 2 -> menuLogin();
 			}
 		} while(respuesta != 0);
-	}
+	}*/
 	
-	private static void menuLogin() {
-		//verificar que el nombre Y el genero estan en la tabla para hacer el login
+	/*private static void menuRegistro() {
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
-		System.out.println("Estas loggeado");
+		Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
+		System.out.println("¡Esta registrado, por favor haga login!");
+		dbman.addEntrenador(entrenador);
+	}*/
+	
+	private static void menuEntrenador() {
+		System.out.println("Menu entrenador: estas loggeado");
 		int respuesta;
 		do {
 			respuesta = showMenu(MENU_ENTRENADOR_LOGGED);
@@ -94,7 +152,7 @@ public class Main {
 	}
 	
 	private static void menuBuscarPokemonByNombre() {
-		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//ME DEVUELVE NULL SI ELIJO UN NOMBRE VALIDO 
+		String nombrePokemon = askForText("Indique el nombre del pokemon:");		 
 		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println(pokemon);
 	}
@@ -129,12 +187,10 @@ public class Main {
 			} while(respuesta != 0);
 		}
 
-	
 
-	private static void menuRealeasePokemon() {				//elimina un pokemon de la tabla PERO DA UN ERROR BIEN RARO
+	private static void menuRealeasePokemon() {		
 		verPokemons();
 		int id = askForInt("Inserta el id del pokemon que quiere eliminar: ");
-		Pokemon pokemon = dbman.getPokemonById(id); 
 		int result = dbman.releasePokemon(id);
 		if(result == 1) {
 			System.out.println("El pokemon con id:  '" + id + "' se ha dejado ir con éxito");
@@ -150,18 +206,18 @@ public class Main {
 		String habilidad = askForText("Indique la habilidad del pokemon:");
 		String genero = askForText("Indique el genero del pokemon:");
 		int rutaP = askForInt("Indique la ruta del pokemon:");
-		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		//hay que agregar los verdaderos valores del constructor
+		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		
 		dbman.addPokemon(pokemon);
 	}
 	
 
-	private static void menuRegistro() {
+	/*private static void menuRegistro() {
 		String nombre = askForText("Indique su nombre:");
 		String genero = askForText("Indique su genero:");
 		Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
 		System.out.println("¡Esta registrado, por favor haga login!");
 		dbman.addEntrenador(entrenador);
-	}
+	}*/
 	
 	
 	private static void menuCentroPokemon() {
@@ -178,31 +234,23 @@ public class Main {
 	
 	
 	private static void gestionarEntrenador() {
-		System.out.println("Menú Entrenador dentro del Centro Pokemon");
-		int respuesta;
-		do {
-			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR);
-			switch(respuesta) {
-				case 1 -> menuIdEntrenador();
+		System.out.println("Login del entrenador en el centro pokemon: ");
+		String nombre = askForText("Indique su nombre:");
+		String password = askForText("Indique su contraseña:");
+		usuario = userman.checkLogin(nombre, password);
+		if (usuario == null) {
+			System.out.println("Nombre o contraseña incorrectos");
+		} else {
+			switch(usuario.getRol().getNombre()) {
+				case "entrenador" -> menuPokemonDelEntrenador();
 			}
-		} while(respuesta != 0);
+		}
 	}
 
 
-	private static void menuIdEntrenador() {
-		System.out.println("Menú Entrenador dentro del Centro Pokemon");
-		System.out.println("Va a tener que seleccionar el id para loggearse: ");
-		int respuesta;
-		do {
-			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_ID);
-			switch(respuesta) {
-				case 1 -> menuPokemonDelEntrenador();
-			}
-		} while(respuesta != 0);
-	}
 
-	private static void menuPokemonDelEntrenador() {		//hacer un get de los pokemones del entrenador y que muestre caso para cada pokemon que tiene
-		System.out.println("Menú Entrenador dentro del Centro Pokemon, se loggeo con su id: ");
+	private static void menuPokemonDelEntrenador() {
+		System.out.println("Menú Entrenador dentro del Centro Pokemon, ESTA LOGGEADO: ");
 		int respuesta;
 		do {
 			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_INGRESADO);
@@ -214,7 +262,8 @@ public class Main {
 	}
 
 
-	private static void subirMiNivel() {		//DA PROBLEMAS
+	private static void subirMiNivel() {	
+		System.out.println("Se mostraran sus pokemones, elija cual quiere subir de nivel: ");
 		verPokemons();
 		int id = askForInt("Inserta el id del pokemon que quiere subir de nivel: ");
 		Pokemon pokemon = dbman.getPokemonById(id);
@@ -227,7 +276,7 @@ public class Main {
 			dbman.levelUp(pokemon);
 		}
 
-	private static void evolucionarPokemon() {		
+	private static void evolucionarPokemon() {									//hay algo mal
 		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");
 		ArrayList<Pokemon> pokemons = dbman.getListPokemonByNombre(nombrePokemon); //que hago aqui 
@@ -260,7 +309,7 @@ public class Main {
 	}
 
 	private static void localizarPokemon() {
-		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
+		System.out.println("El pokemon que selecione sera localizado: ");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		//me devuelve null en vez del pokemon
 		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon);
 		System.out.println("Se va a evolucionar a: " + pokemon);

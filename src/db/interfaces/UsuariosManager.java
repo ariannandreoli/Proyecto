@@ -13,6 +13,6 @@ public interface UsuariosManager {
 	List<Rol> getRoles();
 	Rol getRolById(int rolId);
 	void addUsuario(Usuario usuario);
-	Usuario checkLogin(String email, String pass);
+	Usuario checkLogin(String nombre, String pass);
 }
 

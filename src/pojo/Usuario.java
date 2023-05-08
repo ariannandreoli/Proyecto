@@ -20,7 +20,7 @@ public class Usuario implements Serializable{
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
-	private String email;
+	private String nombre;
 	@Lob
 	private byte[] password;
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -31,8 +31,8 @@ public class Usuario implements Serializable{
 		super();
 	}
 
-	public Usuario(String email, byte[] hash, Rol rol) {
-		this.email = email;
+	public Usuario(String nombre, byte[] hash, Rol rol) {
+		this.nombre = nombre;
 		this.password = hash;
 		this.rol = rol;
 	}
@@ -45,12 +45,12 @@ public class Usuario implements Serializable{
 		this.id = id;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getNombre() {
+		return nombre;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public byte[] getPassword() {
@@ -88,6 +88,6 @@ public class Usuario implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", email=" + email + "]";
+		return "Usuario [id=" + id + ", nombre=" + nombre + "]";
 	}
 }

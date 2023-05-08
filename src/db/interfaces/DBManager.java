@@ -1,6 +1,8 @@
 package db.interfaces;
 
 import java.util.ArrayList;
+
+import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.Pokemon;
 
@@ -27,13 +29,13 @@ public interface DBManager {
 
 	void addPokemon(Pokemon pokemon);
 
-	boolean addImagenProducto(Pokemon pokemon);
-
 	ArrayList<Pokemon> getPokemonByOrder(int inicio, int fin, int idLimit);
 
 	void evolvePokemon(Pokemon pokemon);
 
 	void levelUp(Pokemon pokemon);
+	
+	void addCentro(CentroPokemon centro);
 
 
 }

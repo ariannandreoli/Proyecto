@@ -5,7 +5,7 @@ public class CentroPokemon {
 	private String ciudad;
 	private String trabajadores;
 	
-	public CentroPokemon (int id, String ciudad, String trabajadores) {
+	public CentroPokemon (int id, String trabajadores, String ciudad) {
 		super();
 		this.id = id;
 		this.ciudad = ciudad;

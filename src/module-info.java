@@ -6,7 +6,8 @@
  *
  */
 open module Proyecto {
-	requires java.logging;
 	requires java.sql;
+	requires java.logging;
 	requires jakarta.persistence;
+	requires java.instrument;
 }
