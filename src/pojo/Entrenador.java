@@ -1,5 +1,7 @@
 package pojo;
 
+import java.util.Objects;
+
 public class Entrenador {
 	private int id;
 	private String nombre;
@@ -35,6 +37,24 @@ public class Entrenador {
 	}
 	public void setGenero(String genero) {
 		this.genero = genero;
+	}
+
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(genero, id, nombre);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Entrenador other = (Entrenador) obj;
+		return Objects.equals(genero, other.genero) && id == other.id && Objects.equals(nombre, other.nombre);
 	}
 
 	@Override

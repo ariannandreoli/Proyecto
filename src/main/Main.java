@@ -16,8 +16,10 @@ import db.jpa.JPAUsuariosManager;
 import logging.MyLogger;
 import pojo.CentroPokemon;
 import pojo.Entrenador;
+import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.Rol;
+import pojo.Ruta;
 import pojo.Usuario;
 
 public class Main {
@@ -128,9 +130,15 @@ public class Main {
 		} while(respuesta != 0);
 	}
 		
-	private static Object menuCapturarPokemon() {
-		// TODO Auto-generated method stub
-		return null;
+	private static void menuCapturarPokemon() {
+		// TODO Añadir cantidad pokemon en entrenadorPokemon
+		/*int idEntrenador = askForInt("Indique su id:");
+		System.out.println("¡Se mostraran los pokemons posibles por capturar!");
+		verPokemons();
+		int idPokemon = askForInt("Indique el id del pokemon que capturo:");
+		EntrenadorPokemon ep = new EntrenadorPokemon (ep.getEntrenador(), ep.get, (ep.getCantidad()+1)); 
+		dbman.addEntrenadorPokemon(ep);*/
+		
 	}
 
 	private static void menuConsultarPokemones() {
@@ -167,6 +175,10 @@ public class Main {
 			offset += limit;
 		} while(respuesta.equals("") && size == limit);
 	}
+	
+	private static void verMisPokemons() {
+		
+	}
 
 	private static void menuActualizarPokemones() {
 		System.out.println("Actualizando Pokedex");
@@ -193,16 +205,16 @@ public class Main {
 		}
 	}
 
-	private static void menuAddPokemon() {					//agrega un pokemon a la tabla
-		String nombre = askForText("Indique el nombre del pokemon:");
-		int nivel = askForInt("Indique el nivel del pokemon:");
-		String habilidad = askForText("Indique la habilidad del pokemon:");
-		String genero = askForText("Indique el genero del pokemon:");
-		int rutaP = askForInt("Indique la ruta del pokemon:");
-		Pokemon pokemon = new Pokemon ( -1, nombre, nivel , habilidad , genero , rutaP);		
-		dbman.addPokemon(pokemon);
+	private static void menuAddPokemon() {
+	    String nombre = askForText("Indique el nombre del pokemon:");
+	    int nivel = askForInt("Indique el nivel del pokemon:");
+	    String habilidad = askForText("Indique la habilidad del pokemon:");
+	    String genero = askForText("Indique el genero del pokemon:");
+	    int rutaId = askForInt("Indique el id de la ruta:");
+	    Ruta ruta = new Ruta(rutaId, rutaId); 
+	    Pokemon pokemon = new Pokemon(-1, nombre.toUpperCase(), nivel , habilidad.toUpperCase(), genero.toUpperCase(), ruta);
+	    dbman.addPokemon(pokemon);
 	}
-	
 
 	/*private static void menuRegistro() {
 		String nombre = askForText("Indique su nombre:");
@@ -220,7 +232,7 @@ public class Main {
 			respuesta = showMenu(MENU_CENTRO_POKEMON);
 			switch(respuesta) {
 				case 1 -> localizarPokemon();
-				case 2 -> gestionarEntrenador();		//hacer un login desde el centro
+				case 2 -> gestionarEntrenador();		
 			}
 		} while(respuesta != 0);
 	}

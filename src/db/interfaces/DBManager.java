@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pojo.CentroPokemon;
 import pojo.Entrenador;
+import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 
 
@@ -15,8 +16,6 @@ public interface DBManager {
 
 	int countElementsFromTable (String tableName);
 
-	ArrayList<Entrenador> getEntrenador();
-
 	boolean addEntrenador(Entrenador entrenador);
 	
 	Pokemon getPokemonById(int id);
@@ -27,7 +26,7 @@ public interface DBManager {
 	
 	int releasePokemon(int id);
 
-	void addPokemon(Pokemon pokemon);
+	boolean addPokemon(Pokemon pokemon);
 
 	ArrayList<Pokemon> getPokemonByOrder(int inicio, int fin, int idLimit);
 
@@ -36,6 +35,10 @@ public interface DBManager {
 	void levelUp(Pokemon pokemon);
 	
 	void addCentro(CentroPokemon centro);
+
+	boolean addEntrenadorPokemon(EntrenadorPokemon ep);
+
+	ArrayList<Entrenador> getEntrenadores();
 
 
 }

@@ -37,12 +37,12 @@ FOREIGN KEY (IdCentro) REFERENCES Centro,
 PRIMARY KEY (IdEntrenador, IdCentro));
 
 CREATE TABLE IF NOT EXISTS "Entrenador-Pokemon" (
-IdPokemon INTEGER,
 IdEntrenador INTEGER,
+IdPokemon INTEGER,
 Cantidad INTEGER,
-FOREIGN KEY (IdPokemon) REFERENCES Pokemon,
 FOREIGN KEY (IdEntrenador) REFERENCES Entrenador,
-PRIMARY KEY (IdPokemon, IdEntrenador)
+FOREIGN KEY (IdPokemon) REFERENCES Pokemon,
+PRIMARY KEY (IdEntrenador, IdPokemon)
 );
 
 CREATE TABLE IF NOT EXISTS Ruta (

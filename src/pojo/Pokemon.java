@@ -1,24 +1,33 @@
 package pojo;
 
+import java.util.Objects;
+
 public class Pokemon {
 	private int id;
 	private String nombre;
 	private int nivel;
 	private String habilidad;
 	private String genero;
-	private int rutaP;
+	private Ruta rutaP;
 	
-	
-	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero, int rutaP) {
+	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.nivel = nivel;
 		this.habilidad= habilidad;
 		this.genero = genero;
-		this.rutaP = rutaP;
 	}
-
+	
+	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero, Ruta rutaP) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.nivel = nivel;
+		this.habilidad= habilidad;
+		this.genero = genero;
+		this.rutaP = rutaP; 
+	}
 
 	public int getId() {
 		return id;
@@ -70,24 +79,22 @@ public class Pokemon {
 	}
 
 
-	public int getRutaP() {
+	public Ruta getRutaP() {
 		return rutaP;
 	}
 
 
-	public void setRutaP(int rutaP) {
+	public void setRutaP(Ruta rutaP) {
 		this.rutaP = rutaP;
 	}
 
-	/*public void setImagen(byte[] imagen) {
-		this.imagen = imagen;
-	}*/
+	
 
 	@Override
-	public String toString() {
-		return "Pokemon [id=" + id + ", nombre=" + nombre + ", nivel=" + nivel + ", habilidad=" + habilidad
-				+ ", genero=" + genero + ", rutaP=" + rutaP + "]";
+	public int hashCode() {
+		return Objects.hash(genero, habilidad, id, nivel, nombre, rutaP);
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -98,8 +105,17 @@ public class Pokemon {
 		if (getClass() != obj.getClass())
 			return false;
 		Pokemon other = (Pokemon) obj;
-		return id == other.id;
+		return Objects.equals(genero, other.genero) && Objects.equals(habilidad, other.habilidad) && id == other.id
+				&& nivel == other.nivel && Objects.equals(nombre, other.nombre) && rutaP == other.rutaP;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Pokemon [id=" + id + ", nombre=" + nombre + ", nivel=" + nivel + ", habilidad=" + habilidad
+				+ ", genero=" + genero + ", rutaP=" + rutaP + "]";
+	}
+
 
 
 }
