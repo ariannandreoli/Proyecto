@@ -20,6 +20,7 @@ import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.Ruta;
+import pojo.Usuario;
 
 public class JDBCManager implements DBManager{
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
@@ -38,6 +39,7 @@ public class JDBCManager implements DBManager{
 	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
+	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";	
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
@@ -58,6 +60,7 @@ public class JDBCManager implements DBManager{
 	private Connection c;
 	
 	private final int NUM_ENTRENADOR = 1000;
+	private final int NUM_USUARIO = 1000;
 	
 	@Override
 	public void connect() {
@@ -124,8 +127,7 @@ public class JDBCManager implements DBManager{
 			} 
 			else {
 				LOGGER.info("La tabla PokemonTipo ya estaba inicializada");
-			}
-			if(countElementsFromTable("Entrenador") == 0) {
+			} if(countElementsFromTable("Entrenador") == 0) {
 				for(int i = 0; i < NUM_ENTRENADOR; i++) {
 					//TODO Añadir los entrenadores en batch
 					Entrenador entrenador = factory.generarEntrenadorAleatorio();
@@ -136,12 +138,10 @@ public class JDBCManager implements DBManager{
 				for(int i = 0; i < entrenadores.size(); i++) {
 					Entrenador entrenador = entrenadores.get(i);
 					Pokemon pokemon = pokemons.get(randomInt(pokemons.size()));
-					/*Pokemon pokemon = pokemons.get(i);
-					Entrenador entrenador = entrenadores.get(randomInt(pokemons.size()));*/
 					int cantidad = randomInt(4) + 1;
 					EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
 					addEntrenadorPokemon(ep);
-					//TODO Añadir más de un producto por pedido
+					//TODO Añadir más de un entrenador por pokemon
 					}
 				LOGGER.info("Inicializadas las tablas Entrenadores, Centro Pokemon , Pokemones, Pokedex, Ruta, Tipo");
 			} 
@@ -281,6 +281,29 @@ public class JDBCManager implements DBManager{
 		}
 		return true;
 	}
+	
+	@Override
+	public boolean addUsuario(Usuario u) {
+		try {
+			ResultSet rs = stmt.executeQuery(STMT_GET_USUARIO_BY_ID + u.getId()+ "';");
+			if(rs.next()) {
+				return false;
+			}	
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			prepAddEntrenador.setString(1, u.getNombre());
+			prepAddEntrenador.setBytes(2, u.getPassword());
+			prepAddEntrenador.setInt(3, u.getRol().getId());
+			prepAddEntrenador.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return true;
+	}
 
 	@Override
 	public Pokemon getPokemonByNombre(String nombrePokemon) {
@@ -295,8 +318,9 @@ public class JDBCManager implements DBManager{
 	            int nivel = rs.getInt("Nivel");
 	            String habilidad = rs.getString("Habilidad");
 	            String genero = rs.getString("Genero");
-	            //int rutaP = rs.getInt("RutaP");
-	            pokemon = new Pokemon(id, nombre, nivel, habilidad, genero);
+	            int rutaP = rs.getInt("RutaP");
+				Ruta r= new Ruta (rutaP, rutaP);
+				pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, r);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
@@ -333,7 +357,7 @@ public class JDBCManager implements DBManager{
 			prepAddPokemon.setInt(2, pokemon.getNivel());
 			prepAddPokemon.setString(3, pokemon.getHabilidad());
 			prepAddPokemon.setString(4, pokemon.getGenero());
-			//prepAddPokemon.setInt(5, pokemon.getRutaP().getId());
+			prepAddPokemon.setInt(5, pokemon.getRutaP().getId());
 			prepAddPokemon.executeUpdate();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -353,8 +377,9 @@ public class JDBCManager implements DBManager{
 				int nivel = rs.getInt("Nivel");
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
-				//int rutaP = rs.getInt("RutaP");
-				Pokemon pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero);
+				int rutaP = rs.getInt("RutaP");
+				Ruta r= new Ruta (rutaP, rutaP);
+				Pokemon pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, r);
 				pokemons.add(pokemon);
 			}
 		} catch (SQLException e) {

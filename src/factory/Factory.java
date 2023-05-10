@@ -6,6 +6,8 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import pojo.Entrenador;
+import pojo.Rol;
+import pojo.Usuario;
 
 //INSERTA EL ID Y EL GENERO PERO NO LE PONE NOMBRES ALEATORIOS 
 
@@ -15,6 +17,9 @@ public class Factory {
 	private static int id = 1;
 	private String[] nombres;
 	private final String[] GENEROS = {"F", "M"};
+	private final byte[] PASS = {1};
+	private final Rol r = new Rol ();
+	
 	
 	public Factory() {
 		nombres = readFile(FICHERO_NOMBRES);
@@ -45,6 +50,15 @@ public class Factory {
 		return entrenador;
 	}
 	
+	public Usuario generarUsuarioAleatorio() {
+		Usuario user = new Usuario();	
+		String nombre = nombres[randomInt(nombres.length)];
+		user.setNombre(nombre);
+		user.setPassword(PASS);
+		user.setRol(r);
+		id++;
+		return user;
+	}
 	
 	private static int randomInt(int max) {
 		return (int) (Math.random() * max);

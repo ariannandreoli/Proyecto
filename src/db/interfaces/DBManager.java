@@ -6,6 +6,7 @@ import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
+import pojo.Usuario;
 
 
 public interface DBManager {
@@ -39,6 +40,8 @@ public interface DBManager {
 	boolean addEntrenadorPokemon(EntrenadorPokemon ep);
 
 	ArrayList<Entrenador> getEntrenadores();
+
+	boolean addUsuario(Usuario u);
 
 
 }

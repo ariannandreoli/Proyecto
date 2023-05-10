@@ -29,6 +29,12 @@ public class JPAUsuariosManager implements UsuariosManager{
 			addRol(new Rol("entrenador"));
 			addRol(new Rol("centro_pokemon"));
 		}
+		/*if(countElementsFromTable("Usuario") == 0) {
+			for(int i = 0; i < NUM_USUARIO; i++) {
+				//TODO Añadir los entrenadores en batch
+				Usuario u = factory.generarUsuarioAleatorio();
+				addUsuario(u);
+			}*/
 	}
 
 	@Override
