@@ -205,7 +205,7 @@ public class Main {
 		}
 	}
 
-	private static void menuAddPokemon() {
+	private static void menuAddPokemon() {		//NO SE ESTAN GUARDANDO LAS RUTAS COMO CLLAVES AJENAS Y SALE NULL
 	    String nombre = askForText("Indique el nombre del pokemon:");
 	    int nivel = askForInt("Indique el nivel del pokemon:");
 	    String habilidad = askForText("Indique la habilidad del pokemon:");
