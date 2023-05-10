@@ -13,6 +13,7 @@ import db.interfaces.DBManager;
 import db.interfaces.UsuariosManager;
 import db.jdbc.JDBCManager;
 import db.jpa.JPAUsuariosManager;
+import factory.Factory;
 import logging.MyLogger;
 import pojo.CentroPokemon;
 import pojo.Entrenador;
@@ -34,6 +35,7 @@ public class Main {
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon"};
 	private static Usuario usuario;
+	private static int NUM_USUARIOS = 1000;
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -52,6 +54,28 @@ public class Main {
 		} while(respuesta != 0);
 		System.out.println("¡Gracias!");
 		dbman.disconnect();
+	}
+	
+	private static void initializeDB() {
+		Factory factory = new Factory();
+			for(int i = 0; i < NUM_USUARIOS; i++) {
+				//TODO Añadir los USUARIOS a ENTRENADORES en batch
+				String pass = "1234";
+				byte[] hash = "";
+				try {
+					MessageDigest md = MessageDigest.getInstance("MD5");
+					md.update(pass.getBytes());
+					byte[] hash = md.digest();
+				} catch (NoSuchAlgorithmException e){
+					e.printStackTrace();
+				}
+				Entrenador entrenador = factory.generarEntrenadorAleatorio();
+				Usuario usuario = new Usuario(entrenador.getNombre().toUpperCase(), hash, rol);
+				Usuario user = factory.generarUsuarioAleatorio();
+				userman.addUsuario(usuario);
+				entrenador.setId(usuario.getId());
+				dbman.addEntrenador(entrenador);
+			}
 	}
 	
 	private static void login() {
@@ -392,5 +416,12 @@ public class Main {
 		}
 		return respuesta;
 	}
+	
+	
+	private static int randomInt(int max) {
+		return (int) (Math.random() * max);
+	}
+	
+	
 }
 

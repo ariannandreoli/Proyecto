@@ -60,7 +60,7 @@ public class JDBCManager implements DBManager{
 	private Connection c;
 	
 	private final int NUM_ENTRENADOR = 1000;
-	private final int NUM_USUARIO = 1000;
+
 	
 	@Override
 	public void connect() {
