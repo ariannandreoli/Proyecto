@@ -43,5 +43,7 @@ public interface DBManager {
 
 	boolean addUsuario(Usuario u);
 
+	ArrayList<Pokemon> getPokemons();
+
 
 }

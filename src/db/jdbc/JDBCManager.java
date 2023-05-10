@@ -127,7 +127,8 @@ public class JDBCManager implements DBManager{
 			} 
 			else {
 				LOGGER.info("La tabla PokemonTipo ya estaba inicializada");
-			} if(countElementsFromTable("Entrenador") == 0) {
+			} 
+			/*if(countElementsFromTable("Entrenador") == 0) {
 				for(int i = 0; i < NUM_ENTRENADOR; i++) {
 					//TODO Añadir los entrenadores en batch
 					Entrenador entrenador = factory.generarEntrenadorAleatorio();
@@ -142,12 +143,9 @@ public class JDBCManager implements DBManager{
 					EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
 					addEntrenadorPokemon(ep);
 					//TODO Añadir más de un entrenador por pokemon
-					}
+					}*/
 				LOGGER.info("Inicializadas las tablas Entrenadores, Centro Pokemon , Pokemones, Pokedex, Ruta, Tipo");
-			} 
-			else {
-				LOGGER.info("La tabla Entrenadores ya estaba inicializada");
-			}
+			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -178,9 +176,8 @@ public class JDBCManager implements DBManager{
 		}
 		return fileContent;
 	}
-
-
-	private ArrayList<Pokemon> getPokemons() {
+	@Override
+	public ArrayList<Pokemon> getPokemons() {
 		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
 			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMONS);

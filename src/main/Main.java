@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 
 import db.interfaces.DBManager;
@@ -43,6 +44,9 @@ public class Main {
 		userman.connect();
 		dbman = new JDBCManager();
 		dbman.connect();
+		if(dbman.countElementsFromTable("Entrenador") == 0) {
+			initializeDB();
+		}
 		System.out.println("¡Bienvenido al mundo Pokemon!");
 		int respuesta;
 		do {
@@ -58,24 +62,34 @@ public class Main {
 	
 	private static void initializeDB() {
 		Factory factory = new Factory();
+		MessageDigest md;
+		List<Rol> roles = userman.getRoles();
 			for(int i = 0; i < NUM_USUARIOS; i++) {
 				//TODO Añadir los USUARIOS a ENTRENADORES en batch
 				String pass = "1234";
-				byte[] hash = "";
+				byte[] hash = null;
 				try {
-					MessageDigest md = MessageDigest.getInstance("MD5");
+					md = MessageDigest.getInstance("MD5");
 					md.update(pass.getBytes());
-					byte[] hash = md.digest();
+					hash = md.digest();
 				} catch (NoSuchAlgorithmException e){
 					e.printStackTrace();
 				}
 				Entrenador entrenador = factory.generarEntrenadorAleatorio();
-				Usuario usuario = new Usuario(entrenador.getNombre().toUpperCase(), hash, rol);
-				Usuario user = factory.generarUsuarioAleatorio();
+				Usuario usuario = new Usuario(entrenador.getNombre().toUpperCase(), hash, roles.get(0));
 				userman.addUsuario(usuario);
 				entrenador.setId(usuario.getId());
 				dbman.addEntrenador(entrenador);
-			}
+			} ArrayList<Pokemon> pokemons = dbman.getPokemons();
+			ArrayList<Entrenador> entrenadores = dbman.getEntrenadores();
+			for(int i = 0; i < entrenadores.size(); i++) {
+				Entrenador entrenador = entrenadores.get(i);
+				Pokemon pokemon = pokemons.get(randomInt(pokemons.size()));
+				int cantidad = randomInt(4) + 1;
+				EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
+				dbman.addEntrenadorPokemon(ep);
+				//TODO Añadir más de un entrenador por pokemon
+				}
 	}
 	
 	private static void login() {
