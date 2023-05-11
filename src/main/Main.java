@@ -159,7 +159,7 @@ public class Main {
 		Pokemon p = dbman.getPokemonById(idP);
 		int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
 		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
-		System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
+		System.out.println("Ahora el entrenador " + ep.getEntrenador() + "tiene " + ep.getCantidad() + "de " + ep.getPokemon());
 		dbman.addEntrenadorPokemon(ep);
 		
 	}
@@ -296,8 +296,18 @@ public class Main {
 
 
 	private static void subirMiNivel() {	
+		
+		//deberiamos chequear si el id que pone es igual al que tiene, si lo es aumenta la cantidad a uno, sino puedes añadir un pokemon nuevo
+		/*int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
+		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
+		System.out.println("Ahora el entrenador " + ep.getEntrenador() + "tiene " + ep.getCantidad() + "de " + ep.getPokemon());
+		dbman.addEntrenadorPokemon(ep);*/
+		
+		String nombreE = askForText("Indique su nombre: ");		 
+		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
+		System.out.println(e);
 		System.out.println("Se mostraran sus pokemones, elija cual quiere subir de nivel: ");
-		verPokemons();
+		verMisPokemons();
 		int id = askForInt("Inserta el id del pokemon que quiere subir de nivel: ");
 		Pokemon pokemon = dbman.getPokemonById(id);
 		if (pokemon != null)
