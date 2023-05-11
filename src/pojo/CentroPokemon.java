@@ -12,6 +12,10 @@ public class CentroPokemon {
 		this.trabajadores= trabajadores;
 	}
 
+	public CentroPokemon() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public int getId() {
 		return id;
 	}

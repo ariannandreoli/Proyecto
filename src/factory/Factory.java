@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
+import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.Rol;
 import pojo.Usuario;
@@ -17,6 +18,7 @@ public class Factory {
 	private static int id = 1;
 	private String[] nombres;
 	private final String[] GENEROS = {"F", "M"};
+	private final String[] CIUDAD = {"CARMIN", "AZAFRAN", "AZULONA", "VERDE", "FUSCIA", "CANELA", "PLATEADA"};
 	private final byte[] PASS = {1};
 	private final Rol r = new Rol ();
 	
@@ -48,6 +50,15 @@ public class Factory {
 		entrenador.setGenero(GENEROS[randomInt(GENEROS.length)]);
 		id++;
 		return entrenador;
+	}
+	
+	public CentroPokemon generarCentroAleatorio() {
+		CentroPokemon cp = new CentroPokemon();	
+		String nombre = nombres[randomInt(nombres.length)];
+		cp.setTrabajadores(nombre);
+		cp.setCiudad(CIUDAD[randomInt(CIUDAD.length)]);
+		id++;
+		return cp;
 	}
 	
 	public Usuario generarUsuarioAleatorio() {

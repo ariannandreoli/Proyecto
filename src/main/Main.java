@@ -36,7 +36,8 @@ public class Main {
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
 	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon"};
 	private static Usuario usuario;
-	private static int NUM_USUARIOS = 1000;
+	private static int NUM_USUARIOSE = 1000;
+	private static int NUM_USUARIOSC = 10;
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -64,7 +65,7 @@ public class Main {
 		Factory factory = new Factory();
 		MessageDigest md;
 		List<Rol> roles = userman.getRoles();
-			for(int i = 0; i < NUM_USUARIOS; i++) {
+			for(int i = 0; i < NUM_USUARIOSE; i++) {
 				//TODO Añadir los USUARIOS a ENTRENADORES en batch
 				String pass = "1234";
 				byte[] hash = null;
@@ -80,7 +81,25 @@ public class Main {
 				userman.addUsuario(usuario);
 				entrenador.setId(usuario.getId());
 				dbman.addEntrenador(entrenador);
-			} ArrayList<Pokemon> pokemons = dbman.getPokemons();
+				
+			} for(int i = 0; i < NUM_USUARIOSC; i++) {
+				//TODO Añadir los USUARIOS a CENTRO en batch
+				String pass = "1234";
+				byte[] hash = null;
+				try {
+					md = MessageDigest.getInstance("MD5");
+					md.update(pass.getBytes());
+					hash = md.digest();
+				} catch (NoSuchAlgorithmException e){
+					e.printStackTrace();
+				}
+				CentroPokemon centro = factory.generarCentroAleatorio();
+				Usuario u = new Usuario(centro.getTrabajadores().toUpperCase(), hash, roles.get(1));
+				userman.addUsuario(u);
+				centro.setId(u.getId());
+				dbman.addCentro(centro);
+			}
+			ArrayList<Pokemon> pokemons = dbman.getPokemons();
 			ArrayList<Entrenador> entrenadores = dbman.getEntrenadores();
 			for(int i = 0; i < entrenadores.size(); i++) {
 				Entrenador entrenador = entrenadores.get(i);
@@ -295,13 +314,7 @@ public class Main {
 	}
 
 
-	private static void subirMiNivel() {	
-		
-		//deberiamos chequear si el id que pone es igual al que tiene, si lo es aumenta la cantidad a uno, sino puedes añadir un pokemon nuevo
-		/*int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
-		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
-		System.out.println("Ahora el entrenador " + ep.getEntrenador() + "tiene " + ep.getCantidad() + "de " + ep.getPokemon());
-		dbman.addEntrenadorPokemon(ep);*/
+	private static void subirMiNivel() {	//sube de nivel al pokemon de la tabla completa ya que todos los entrenadores tienen pokemones con iguales cualidades 
 		
 		String nombreE = askForText("Indique su nombre: ");		 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
@@ -319,7 +332,7 @@ public class Main {
 			dbman.levelUp(pokemon);
 		}
 
-	private static void evolucionarPokemon() {									//hay algo mal
+	private static void evolucionarPokemon() {				//cambiar esto a enseñar el tipo de pokemon
 		
 		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		 

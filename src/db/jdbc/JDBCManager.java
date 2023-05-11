@@ -112,13 +112,13 @@ public class JDBCManager implements DBManager {
 			else {
 				LOGGER.info("La tabla Tipo ya estaba inicializada");
 			}
-			if(countElementsFromTable("Centro") == 0) {
+			/*if(countElementsFromTable("Centro") == 0) {
 				stmt.executeUpdate(readFile(FICHERO_DML_CENTRO));
 				LOGGER.info("Inicializada la tabla Centro");
 			} 
 			else {
 				LOGGER.info("La tabla Centro ya estaba inicializada");
-			}
+			}*/
 			if(countElementsFromTable("Ruta") == 0) {
 				stmt.executeUpdate(readFile(FICHERO_DML_RUTA));
 				LOGGER.info("Inicializada la tabla Ruta");
