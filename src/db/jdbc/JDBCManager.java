@@ -22,7 +22,7 @@ import pojo.Pokemon;
 import pojo.Ruta;
 import pojo.Usuario;
 
-public class JDBCManager implements DBManager{
+public class JDBCManager implements DBManager {
 	final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	final String FICHERO_DDL = "./db/ddl.sql";
 	final String FICHERO_DML = "./db/dml.sql";
@@ -39,13 +39,16 @@ public class JDBCManager implements DBManager{
 	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
-	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";	
+	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";
+	private final String STMT_GET_POKEMON_ENTRENADOR_BY_ID= "SELECT * FROM EntrenadorPokemon WHERE IdEntrenador='";
+	private final String STMT_CHECK_POKEMON_ENTRENADOR_BY_ID= "SELECT COUNT(*) FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
 	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
 	private final String PREP_EVOLVE_POKEMON = "UPDATE Pokemon SET Nombre=?, Nivel=?, Habilidad=?, Genero=? WHERE Id=?;";
 	private final String PREP_LEVEL_UP_POKEMON = "UPDATE Pokemon SET Nivel=? WHERE Id=?;";
+	private final String PREP_EVOLVE_ENTRENADOR_POKEMON = "UPDATE 'Entrenador-Pokemon' SET IdEntrenador=?, IdPokemon=?, Cantidad=? WHERE IdPokemon=?;";
 	private final String PREP_ADD_CENTRO = "INSERT INTO Centro (Id, Trabajadores, Ciudad) VALUES (?,?,?);";
 	private final String PREP_ADD_POKEMON_ENTRENADOR = "INSERT INTO 'Entrenador-Pokemon' (IdPokemon, IdEntrenador, Cantidad) VALUES (?,?,?);";
 	private Statement stmt;
@@ -56,6 +59,7 @@ public class JDBCManager implements DBManager{
 	private PreparedStatement prepLevelUpPokemon;
 	private PreparedStatement prepAddCentro;
 	private PreparedStatement prepAddEntrenadorPokemon;
+	private PreparedStatement prepEvolveEntrenadorPokemon;
 	
 	private Connection c;
 	
@@ -91,6 +95,7 @@ public class JDBCManager implements DBManager{
 			prepLevelUpPokemon= c.prepareStatement(PREP_LEVEL_UP_POKEMON);
 			prepAddCentro = c.prepareStatement(PREP_ADD_CENTRO);
 			prepAddEntrenadorPokemon = c.prepareStatement(PREP_ADD_POKEMON_ENTRENADOR);
+			prepEvolveEntrenadorPokemon = c.prepareStatement(PREP_EVOLVE_ENTRENADOR_POKEMON);
 			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
@@ -127,24 +132,7 @@ public class JDBCManager implements DBManager{
 			} 
 			else {
 				LOGGER.info("La tabla PokemonTipo ya estaba inicializada");
-			} 
-			/*if(countElementsFromTable("Entrenador") == 0) {
-				for(int i = 0; i < NUM_ENTRENADOR; i++) {
-					//TODO Añadir los entrenadores en batch
-					Entrenador entrenador = factory.generarEntrenadorAleatorio();
-					addEntrenador(entrenador);
-				}
-				ArrayList<Pokemon> pokemons = getPokemons();
-				ArrayList<Entrenador> entrenadores = getEntrenadores();
-				for(int i = 0; i < entrenadores.size(); i++) {
-					Entrenador entrenador = entrenadores.get(i);
-					Pokemon pokemon = pokemons.get(randomInt(pokemons.size()));
-					int cantidad = randomInt(4) + 1;
-					EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
-					addEntrenadorPokemon(ep);
-					//TODO Añadir más de un entrenador por pokemon
-					}*/
-				LOGGER.info("Inicializadas las tablas Entrenadores, Centro Pokemon , Pokemones, Pokedex, Ruta, Tipo");
+			} LOGGER.info("Inicializadas las tablas Centro Pokemon , Pokemon, PokemonTipo, Ruta, Tipo");
 			
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -176,6 +164,7 @@ public class JDBCManager implements DBManager{
 		}
 		return fileContent;
 	}
+	
 	@Override
 	public ArrayList<Pokemon> getPokemons() {
 		ArrayList<Pokemon> pokemons = new ArrayList<>();
@@ -200,8 +189,8 @@ public class JDBCManager implements DBManager{
 		return pokemons;
 	}
 
-
-	private Ruta getRutaById(int idRuta) {
+	@Override
+	public Ruta getRutaById(int idRuta) {
 		Ruta ruta = null;
 		try {
 			ResultSet rs = stmt.executeQuery(STMT_GET_RUTA_BY_ID + idRuta);
@@ -385,6 +374,7 @@ public class JDBCManager implements DBManager{
 		}
 		return pokemons;
 		}
+	
 
 	@Override
 	public Pokemon getPokemonById(int idPokemon) {
@@ -412,6 +402,41 @@ public class JDBCManager implements DBManager{
 	
 	
 	@Override
+	public Entrenador getEntrenadorByNombre (String nombreE) {
+		Entrenador entrenador = null;
+		try {
+			PreparedStatement pstmt = c.prepareStatement("SELECT * FROM Entrenador WHERE Nombre = ?");
+	        pstmt.setString(1, nombreE);
+	        ResultSet rs = pstmt.executeQuery();
+			if(rs.next()) {
+				int id = rs.getInt("Id");
+				String nombre = rs.getString("Nombre");
+				String genero = rs.getString("Genero");
+				entrenador = new Entrenador (id, nombre, genero);
+			}			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return entrenador;
+	}
+	
+
+	
+	/*@Override
+	public void evolveEntrenadorPokemon (EntrenadorPokemon ep) {
+		try {
+			prepEvolveEntrenadorPokemon.setInt(1, ep.getEntrenador().getId());
+			prepEvolveEntrenadorPokemon.setInt(2, ep.getPokemon().getId());
+			prepEvolveEntrenadorPokemon.setInt(3, ep.getCantidad());
+			prepEvolveEntrenadorPokemon.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}*/
+	
+	@Override
 	public void evolvePokemon (Pokemon pokemon) {
 		try {
 			prepEvolvePokemon.setString(1, pokemon.getNombre());
@@ -427,10 +452,25 @@ public class JDBCManager implements DBManager{
 		}
 	}
 	
+	@Override
+	public ArrayList<Integer> getPokemonByEntrenador(int identrenador) {
+		String sql = "SELECT IdPokemon FROM 'Entrenador-Pokemon' WHERE IdEntrenador ="+identrenador;
+		ArrayList<Integer> pokemonsid = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+		        int pokemonId = rs.getInt("IdPokemon");
+	            pokemonsid.add(pokemonId);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return pokemonsid;
+	}
 
 
 	@Override
-	public ArrayList<Pokemon> getListPokemonByNombre(String nombreP) {
+	public ArrayList<Pokemon> getListPokemonByNombre (String nombreP) {
 		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try {
 			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_BY_NOMBRE + nombreP + ";");
@@ -499,13 +539,6 @@ public class JDBCManager implements DBManager{
 		}
 		return exito;
 	}
-	
-	
-	
-	private static int randomInt(int max) {
-		return (int) (Math.random() * max);
-	}
-
 	
 	
 }

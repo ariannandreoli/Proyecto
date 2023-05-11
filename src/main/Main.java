@@ -135,26 +135,6 @@ public class Main {
 		}
 	}
 	
-	/*private static void menuEntrenador() {
-		System.out.println("Menú Entrenador");
-		int respuesta;
-		do {
-			respuesta = showMenu(MENU_ENTRENADOR);
-			switch(respuesta) {
-				case 1 -> menuRegistro();  
-				case 2 -> menuLogin();
-			}
-		} while(respuesta != 0);
-	}*/
-	
-	/*private static void menuRegistro() {
-		String nombre = askForText("Indique su nombre:");
-		String genero = askForText("Indique su genero:");
-		Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
-		System.out.println("¡Esta registrado, por favor haga login!");
-		dbman.addEntrenador(entrenador);
-	}*/
-	
 	private static void menuEntrenador() {
 		System.out.println("Menu entrenador: estas loggeado");
 		int respuesta;
@@ -168,14 +148,19 @@ public class Main {
 		} while(respuesta != 0);
 	}
 		
+	
 	private static void menuCapturarPokemon() {
-		// TODO Añadir cantidad pokemon en entrenadorPokemon
-		/*int idEntrenador = askForInt("Indique su id:");
-		System.out.println("¡Se mostraran los pokemons posibles por capturar!");
-		verPokemons();
-		int idPokemon = askForInt("Indique el id del pokemon que capturo:");
-		EntrenadorPokemon ep = new EntrenadorPokemon (ep.getEntrenador(), ep.get, (ep.getCantidad()+1)); 
-		dbman.addEntrenadorPokemon(ep);*/
+		String nombreE = askForText("Indique su nombre: ");		 
+		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
+		System.out.println(e);
+		verMisPokemons();
+		int idP = askForInt("Indique el del pokemon: ");
+		//deberiamos chequear si el id que pone es igual al que tiene, si lo es aumenta la cantidad a uno, sino puedes añadir un pokemon nuevo
+		Pokemon p = dbman.getPokemonById(idP);
+		int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
+		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
+		System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
+		dbman.addEntrenadorPokemon(ep);
 		
 	}
 
@@ -215,6 +200,11 @@ public class Main {
 	}
 	
 	private static void verMisPokemons() {
+		int id=askForInt("Inserta tu id");
+		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
+		for (int i = 0; i < pokemons.size(); i++) {
+			System.out.println(pokemons.get(i));
+			}
 		
 	}
 
@@ -243,7 +233,7 @@ public class Main {
 		}
 	}
 
-	private static void menuAddPokemon() {		//NO SE ESTAN GUARDANDO LAS RUTAS COMO CLLAVES AJENAS Y SALE NULL
+	private static void menuAddPokemon() {		
 	    String nombre = askForText("Indique el nombre del pokemon:");
 	    int nivel = askForInt("Indique el nivel del pokemon:");
 	    String habilidad = askForText("Indique la habilidad del pokemon:");
@@ -253,15 +243,6 @@ public class Main {
 	    Pokemon pokemon = new Pokemon(-1, nombre.toUpperCase(), nivel , habilidad.toUpperCase(), genero.toUpperCase(), ruta);
 	    dbman.addPokemon(pokemon);
 	}
-
-	/*private static void menuRegistro() {
-		String nombre = askForText("Indique su nombre:");
-		String genero = askForText("Indique su genero:");
-		Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
-		System.out.println("¡Esta registrado, por favor haga login!");
-		dbman.addEntrenador(entrenador);
-	}*/
-	
 	
 	private static void menuCentroPokemon() {
 		System.out.println("Menú Centro Pokemon");
@@ -329,10 +310,8 @@ public class Main {
 		}
 
 	private static void evolucionarPokemon() {									//hay algo mal
+		
 		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
-		/*String nombrePokemon = askForText("Indique el nombre del pokemon:");
-		ArrayList<Pokemon> pokemons = dbman.getListPokemonByNombre(nombrePokemon); //que hago aqui 
-		Pokemon pokemon = selectPokemon(pokemons);*/
 		String nombrePokemon = askForText("Indique el nombre del pokemon:");		 
 		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon.toUpperCase());		//null me sale de pokemon
 		System.out.println("El pokemon que se evolucionara es: " + pokemon);

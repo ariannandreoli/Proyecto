@@ -6,6 +6,7 @@ import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
+import pojo.Ruta;
 import pojo.Usuario;
 
 
@@ -37,13 +38,19 @@ public interface DBManager {
 	
 	void addCentro(CentroPokemon centro);
 
-	boolean addEntrenadorPokemon(EntrenadorPokemon ep);
-
 	ArrayList<Entrenador> getEntrenadores();
 
 	boolean addUsuario(Usuario u);
 
 	ArrayList<Pokemon> getPokemons();
+
+	Ruta getRutaById(int idRuta);
+
+	Entrenador getEntrenadorByNombre(String nombreE);
+
+	ArrayList<Integer> getPokemonByEntrenador(int identrenador);
+	
+	boolean addEntrenadorPokemon(EntrenadorPokemon ep);
 
 
 }

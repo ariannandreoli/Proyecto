@@ -29,6 +29,10 @@ public class Pokemon {
 		this.rutaP = rutaP; 
 	}
 
+	public Pokemon() {
+		
+	}
+	
 	public int getId() {
 		return id;
 	}
