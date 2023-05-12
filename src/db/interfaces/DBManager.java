@@ -7,6 +7,7 @@ import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.Ruta;
+import pojo.Tipo;
 import pojo.Usuario;
 
 
@@ -51,6 +52,11 @@ public interface DBManager {
 	ArrayList<Integer> getPokemonByEntrenador(int identrenador);
 	
 	boolean addEntrenadorPokemon(EntrenadorPokemon ep);
+
+	ArrayList<Integer> getTipoByPokemon(int idPokemon);
+
+	Tipo getTipoById(int idT);
+	
 
 
 }

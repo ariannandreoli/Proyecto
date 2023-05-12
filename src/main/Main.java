@@ -22,6 +22,7 @@ import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.Rol;
 import pojo.Ruta;
+import pojo.Tipo;
 import pojo.Usuario;
 
 public class Main {
@@ -34,7 +35,7 @@ public class Main {
 	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokemones", "Consultar Pokemones", "Capturar Pokemon"};
 	private static final String[] MENU_ACTUALIZAR_POKEMONES = {"Salir","Add Pokemon", "Delete Pokemon"};
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
-	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon"};
+	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon", "Ver tipo Pokemon"};
 	private static Usuario usuario;
 	private static int NUM_USUARIOSE = 1000;
 	private static int NUM_USUARIOSC = 10;
@@ -270,7 +271,8 @@ public class Main {
 			respuesta = showMenu(MENU_CENTRO_POKEMON);
 			switch(respuesta) {
 				case 1 -> localizarPokemon();
-				case 2 -> gestionarEntrenador();		
+				case 2 -> gestionarEntrenador();	
+				
 			}
 		} while(respuesta != 0);
 	}
@@ -309,6 +311,7 @@ public class Main {
 			switch(respuesta) {
 				case 1 -> evolucionarPokemon();
 				case 2 -> subirMiNivel();
+				case 3 -> verTipoPokemon();
 			}
 		} while(respuesta != 0);
 	}
@@ -362,6 +365,24 @@ public class Main {
 		System.out.println("La ruta actual del pokemon es " + pokemon.getRutaP() + " donde se encontrara la evolucion tambien."); //debe mantener la misma ruta
 
 		dbman.evolvePokemon(pokemon);
+		
+	}
+	
+	private static void verTipoPokemon() {
+		String nombreE = askForText("Indique su nombre: ");		 
+		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
+		System.out.println(e);
+		System.out.println("Se mostraran sus pokemones, elija de cual quiere ver su tipo: ");
+		verMisPokemons();
+		int idP = askForInt("Indique el Id del pokemon que quiere ver su tipo: ");
+		ArrayList<Integer> tipos = dbman.getTipoByPokemon(idP);
+		for (int i = 0; i < tipos.size(); i++) {
+			System.out.println("Sus tipos son: " + tipos.get(i));
+			}
+		int idT = askForInt("Indique el Id del tipo para ver sus caracteristicas: ");
+		Tipo t = dbman.getTipoById(idT);
+		System.out.println("El pokemon es de tipo: " + t);
+
 		
 	}
 

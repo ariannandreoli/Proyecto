@@ -3,7 +3,6 @@ package db.jdbc;		//clase intermediaria con la base de datos
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +19,7 @@ import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.Ruta;
+import pojo.Tipo;
 import pojo.Usuario;
 
 public class JDBCManager implements DBManager {
@@ -40,8 +40,9 @@ public class JDBCManager implements DBManager {
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
 	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";
-	private final String STMT_GET_POKEMON_ENTRENADOR_BY_ID= "SELECT * FROM EntrenadorPokemon WHERE IdEntrenador='";
-	private final String STMT_CHECK_POKEMON_ENTRENADOR_BY_ID= "SELECT COUNT(*) FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
+	//private final String STMT_GET_POKEMON_ENTRENADOR_BY_ID= "SELECT * FROM EntrenadorPokemon WHERE IdEntrenador='";
+	//private final String STMT_CHECK_POKEMON_ENTRENADOR_BY_ID= "SELECT COUNT(*) FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
+	private final String STMT_GET_TIPO_BY_ID= "SELECT * FROM Tipo WHERE Id=";
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
@@ -400,6 +401,23 @@ public class JDBCManager implements DBManager {
 		return pokemon;
 	}
 	
+	@Override
+	public Tipo getTipoById (int idT) {
+		Tipo t= null;
+		try {
+			ResultSet rs = stmt.executeQuery(STMT_GET_TIPO_BY_ID + idT);
+			if(rs.next()) {
+				int id = rs.getInt("Id");
+				String nombre = rs.getString("Nombre");
+				t = new Tipo(id, nombre);
+			}			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return t;
+	}
+
 	
 	@Override
 	public Entrenador getEntrenadorByNombre (String nombreE) {
@@ -467,6 +485,23 @@ public class JDBCManager implements DBManager {
 	    }
 		return pokemonsid;
 	}
+	
+	@Override
+	public ArrayList<Integer> getTipoByPokemon(int idPokemon) {
+		String sql = "SELECT IdTipo FROM 'PokemonTipo' WHERE IdPokemon ="+ idPokemon;
+		ArrayList<Integer> tiposId = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(sql);
+			while(rs.next()) {
+		        int idTipo = rs.getInt("IdTipo");
+		        tiposId.add(idTipo);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+		return tiposId;
+	}
+	
 
 
 	@Override
