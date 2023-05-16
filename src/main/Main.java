@@ -2,6 +2,7 @@ package main;		//lo relacionado con la interfaz
 //QUITAR LA ENTIDAD DE POKEDEX
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
@@ -9,6 +10,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
+
 
 import db.interfaces.DBManager;
 import db.interfaces.UsuariosManager;
@@ -20,6 +27,7 @@ import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
+import pojo.PokemonTipo;
 import pojo.Rol;
 import pojo.Ruta;
 import pojo.Tipo;
@@ -110,6 +118,9 @@ public class Main {
 				dbman.addEntrenadorPokemon(ep);
 				//TODO Añadir más de un entrenador por pokemon
 				}
+			
+			marshallingXML();
+			//unmarshallingXML();
 	}
 	
 	private static void login() {
@@ -175,11 +186,12 @@ public class Main {
 		System.out.println(e);
 		verMisPokemons();
 		int idP = askForInt("Indique el del pokemon: ");
+		//if ()
 		//deberiamos chequear si el id que pone es igual al que tiene, si lo es aumenta la cantidad a uno, sino puedes añadir un pokemon nuevo
 		Pokemon p = dbman.getPokemonById(idP);
 		int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
 		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
-		System.out.println("Ahora el entrenador " + ep.getEntrenador() + "tiene " + ep.getCantidad() + "de " + ep.getPokemon());
+		System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
 		dbman.addEntrenadorPokemon(ep);
 		
 	}
@@ -220,12 +232,12 @@ public class Main {
 	}
 	
 	private static void verMisPokemons() {
-		int id=askForInt("Inserta tu id");
+		int id=askForInt("Inserta tu id de entrenador: ");
 		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
 		for (int i = 0; i < pokemons.size(); i++) {
 			System.out.println(pokemons.get(i));
 			}
-		
+			pokemons.contains(id);
 	}
 
 	private static void menuActualizarPokemones() {
@@ -324,7 +336,7 @@ public class Main {
 		System.out.println(e);
 		System.out.println("Se mostraran sus pokemones, elija cual quiere subir de nivel: ");
 		verMisPokemons();
-		int id = askForInt("Inserta el id del pokemon que quiere subir de nivel: ");
+		int id = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
 		Pokemon pokemon = dbman.getPokemonById(id);
 		if (pokemon != null)
 			System.out.println("El pokemon actual es " + pokemon.getNombre());
@@ -382,8 +394,6 @@ public class Main {
 		int idT = askForInt("Indique el Id del tipo para ver sus caracteristicas: ");
 		Tipo t = dbman.getTipoById(idT);
 		System.out.println("El pokemon es de tipo: " + t);
-
-		
 	}
 
 
@@ -458,6 +468,53 @@ public class Main {
 	private static int randomInt(int max) {
 		return (int) (Math.random() * max);
 	}
+	
+
+	
+private static void unmarshallingXML() {
+		
+		try {
+			// Creamos el JAXBContext
+			JAXBContext jaxbC = JAXBContext.newInstance(Pokemon.class);
+			// Creamos el JAXBMarshaller
+			Unmarshaller jaxbU = jaxbC.createUnmarshaller();
+			// Leyendo un fichero
+			File XMLfile = new File("pokemons.xml");
+			// Creando el objeto
+			Pokemon p = (Pokemon) jaxbU.unmarshal(XMLfile);
+			// Escribiendo por pantalla el objeto
+			System.out.println(p);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	private static void marshallingXML() {
+		List<Pokemon> pokemons = dbman.getPokemons();
+		List<Tipo> tipos = dbman.getTipos();
+		List<PokemonTipo> pt = dbman.getPokemonTipo();
+		
+		try {
+			JAXBContext jaxbC = JAXBContext.newInstance(Pokemon.class);
+			// Creamos el JAXBMarshaller
+			Marshaller jaxbM = jaxbC.createMarshaller();
+			// Formateo bonito
+			jaxbM.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,Boolean.TRUE);
+			// Escribiendo en un fichero
+			File XMLfile = new File("pokemons.xml");
+			jaxbM.marshal(pokemons.get(0), XMLfile);
+			// Escribiendo por pantalla
+			//jaxbM.marshal(entrenadores.get(0), System.out);
+		} catch (JAXBException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
 	
 	
 }

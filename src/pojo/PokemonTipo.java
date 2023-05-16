@@ -1,15 +1,35 @@
 package pojo;
 
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.Random;
 
-public class PokemonTipo {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+@XmlRootElement(name = "PokemonTipo")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class PokemonTipo implements Serializable{
+	
+	private static final long serialVersionUID = new Random().nextLong();
+
+	@XmlAttribute
 	private Pokemon pokemon;
+	@XmlAttribute
 	private Tipo tipo;
 	
 	public PokemonTipo(Pokemon pokemon, Tipo tipo) {
 		super();
 		this.pokemon = pokemon;
 		this.tipo = tipo;
+	}
+
+		public PokemonTipo() {
+		// TODO Auto-generated constructor stub
 	}
 
 		public Pokemon getPokemon() {

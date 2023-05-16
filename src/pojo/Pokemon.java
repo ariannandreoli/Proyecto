@@ -1,14 +1,47 @@
 package pojo;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
-public class Pokemon {
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+@XmlRootElement(name = "Pokemon")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Pokemon implements Serializable {
+	
+	private static final long serialVersionUID = new Random().nextLong();
+	
+	@XmlElement
 	private int id;
+	
+	@XmlAttribute
 	private String nombre;
+	
+	@XmlElement
 	private int nivel;
+	
+	@XmlElement
 	private String habilidad;
+	
+	@XmlElement
 	private String genero;
+	
+	@XmlElement
 	private Ruta rutaP;
+	
+	@XmlElementWrapper(name = "Tipos")
+    @XmlElement(name = "Tipo")
+    private List<Tipo> tipos;
+	
 	
 	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero) {
 		super();
@@ -30,7 +63,7 @@ public class Pokemon {
 	}
 
 	public Pokemon() {
-		
+		super();
 	}
 	
 	public int getId() {
@@ -96,9 +129,8 @@ public class Pokemon {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(genero, habilidad, id, nivel, nombre, rutaP);
+		return Objects.hash(id);
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -109,10 +141,8 @@ public class Pokemon {
 		if (getClass() != obj.getClass())
 			return false;
 		Pokemon other = (Pokemon) obj;
-		return Objects.equals(genero, other.genero) && Objects.equals(habilidad, other.habilidad) && id == other.id
-				&& nivel == other.nivel && Objects.equals(nombre, other.nombre) && rutaP == other.rutaP;
+		return id == other.id;
 	}
-
 
 	@Override
 	public String toString() {

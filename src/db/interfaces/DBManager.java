@@ -6,6 +6,7 @@ import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
+import pojo.PokemonTipo;
 import pojo.Ruta;
 import pojo.Tipo;
 import pojo.Usuario;
@@ -56,6 +57,10 @@ public interface DBManager {
 	ArrayList<Integer> getTipoByPokemon(int idPokemon);
 
 	Tipo getTipoById(int idT);
+
+	ArrayList<Tipo> getTipos();
+
+	ArrayList<PokemonTipo> getPokemonTipo();
 	
 
 

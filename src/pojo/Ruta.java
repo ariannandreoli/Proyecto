@@ -1,5 +1,6 @@
 package pojo;
 
+
 public class Ruta {
 	private int id;
 	private int nombre;

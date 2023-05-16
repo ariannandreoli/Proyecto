@@ -2,7 +2,9 @@ package pojo;
 
 import java.util.Objects;
 
-public class EntrenadorPokemon {
+
+
+public class EntrenadorPokemon{
 	
 	private Entrenador entrenador;	
 	private Pokemon pokemon;

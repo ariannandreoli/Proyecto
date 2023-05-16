@@ -3,9 +3,11 @@ package pojo;
 import java.util.Objects;
 
 public class Entrenador {
+
 	private int id;
 	private String nombre;
 	private String genero;
+
 	
 	public Entrenador(int id, String nombre, String genero) {
 		super();
@@ -15,8 +17,9 @@ public class Entrenador {
 	}
 	
 	public Entrenador() {
-			this.id = 0;
+		super();
 	}
+	
 
 	public int getId() {
 		return id;

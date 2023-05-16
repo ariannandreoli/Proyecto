@@ -1,8 +1,38 @@
 package pojo;
 
-public class Tipo {
+import java.io.Serializable;
+import java.util.Random;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+
+@XmlRootElement(name = "Tipo")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class Tipo implements Serializable {
+	
+	private static final long serialVersionUID = new Random().nextLong();
+
+	
+	@XmlElement
 	private int id;
+	
+	@XmlAttribute
 	private String nombre;
+	
+	
+	
+	public Tipo() {
+		super();
+	}
 	
 	public Tipo (int id, String nombre) {
 		super();

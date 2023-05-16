@@ -18,6 +18,7 @@ import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
+import pojo.PokemonTipo;
 import pojo.Ruta;
 import pojo.Tipo;
 import pojo.Usuario;
@@ -38,8 +39,10 @@ public class JDBCManager implements DBManager {
 	private final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre =''";
 	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
+	private final String STMT_GET_POKEMON_TIPO = "SELECT * FROM PokemonTipo;";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
 	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";
+	private final String STMT_GET_TIPOS =  "SELECT * FROM Tipo;";
 	//private final String STMT_GET_POKEMON_ENTRENADOR_BY_ID= "SELECT * FROM EntrenadorPokemon WHERE IdEntrenador='";
 	//private final String STMT_CHECK_POKEMON_ENTRENADOR_BY_ID= "SELECT COUNT(*) FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
 	private final String STMT_GET_TIPO_BY_ID= "SELECT * FROM Tipo WHERE Id=";
@@ -190,6 +193,47 @@ public class JDBCManager implements DBManager {
 		return pokemons;
 	}
 
+	@Override
+	public ArrayList<Tipo> getTipos() {
+		ArrayList<Tipo> tipos = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(STMT_GET_TIPOS);
+			while(rs.next()) {
+				int id = rs.getInt("Id");
+				String nombre = rs.getString("Nombre");
+				Tipo tipo = new Tipo (id, nombre);
+				tipos.add(tipo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return tipos;
+	}
+	
+	@Override
+	public ArrayList<PokemonTipo> getPokemonTipo() {
+		ArrayList<PokemonTipo> pts = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_TIPO);
+			while(rs.next()) {
+				PokemonTipo pt = new PokemonTipo();
+				int idPokemon = rs.getInt("idPokemon");
+				Pokemon p = getPokemonById(idPokemon);
+				pt.setPokemon(p);
+				int idTipo = rs.getInt("idTipo");
+				Tipo t = getTipoById(idTipo);
+				pt.setTipo(t);
+				pts.add(pt);
+				
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return pts;
+	}
+	
 	@Override
 	public Ruta getRutaById(int idRuta) {
 		Ruta ruta = null;
