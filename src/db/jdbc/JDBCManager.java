@@ -38,7 +38,7 @@ public class JDBCManager implements DBManager {
 	final String STMT_GET_ENTRENADOR = "SELECT * FROM Entrenador" ;
 	private final String STMT_GET_POKEMON_BY_ID = "SELECT * FROM Pokemon WHERE Id=";
 	private final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre =''";
-	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
+	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id=";	
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
 	private final String STMT_GET_POKEMON_TIPO_BY_POKEMONID = "SELECT * FROM PokemonTipo WHERE IdPokemon=";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
@@ -46,6 +46,7 @@ public class JDBCManager implements DBManager {
 	private final String STMT_GET_TIPOS =  "SELECT * FROM Tipo;";
 	private final String STMT_GET_CENTROS =  "SELECT * FROM Centro;";
 	private final String STMT_GET_TIPO_BY_ID= "SELECT * FROM Tipo WHERE Id=";
+	private final String STMT_GET_ENTRENADORPOKEMON_BY_ID_ENTRENADOR = "SELECT * FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
@@ -55,7 +56,7 @@ public class JDBCManager implements DBManager {
 	private final String PREP_ADD_CENTRO = "INSERT INTO Centro (Id, Trabajadores, Ciudad) VALUES (?,?,?);";
 	private final String PREP_ADD_POKEMON_ENTRENADOR = "INSERT INTO 'Entrenador-Pokemon' (IdPokemon, IdEntrenador, Cantidad) VALUES (?,?,?);";
 	private final String PREP_ADD_ENTRENADOR_CENTRO = "INSERT INTO 'Entrenador-Centro' (IdEntrenador, IdCentro) VALUES (?,?);";
-	
+	private final String PREP_SET_CANTIDAD= "UPDATE 'Entrenador-Pokemon' SET Cantidad=? WHERE IdEntrenador = ? AND IdPokemon = ?;";
 	
 	private Statement stmt;
 	private PreparedStatement prepAddEntrenador;
@@ -66,7 +67,7 @@ public class JDBCManager implements DBManager {
 	private PreparedStatement prepAddCentro;
 	private PreparedStatement prepAddEntrenadorPokemon;
 	private PreparedStatement prepAddEntrenadorCentro;
-	
+	private PreparedStatement prepSetCantidad;
 	private Connection c;
 	
 	private final int NUM_ENTRENADOR = 1000;
@@ -102,6 +103,7 @@ public class JDBCManager implements DBManager {
 			prepAddCentro = c.prepareStatement(PREP_ADD_CENTRO);
 			prepAddEntrenadorPokemon = c.prepareStatement(PREP_ADD_POKEMON_ENTRENADOR);
 			prepAddEntrenadorCentro = c.prepareStatement(PREP_ADD_ENTRENADOR_CENTRO);
+			prepSetCantidad = c.prepareStatement(PREP_SET_CANTIDAD);
 			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
@@ -118,13 +120,6 @@ public class JDBCManager implements DBManager {
 			else {
 				LOGGER.info("La tabla Tipo ya estaba inicializada");
 			}
-			/*if(countElementsFromTable("Centro") == 0) {
-				stmt.executeUpdate(readFile(FICHERO_DML_CENTRO));
-				LOGGER.info("Inicializada la tabla Centro");
-			} 
-			else {
-				LOGGER.info("La tabla Centro ya estaba inicializada");
-			}*/
 			if(countElementsFromTable("Ruta") == 0) {
 				stmt.executeUpdate(readFile(FICHERO_DML_RUTA));
 				LOGGER.info("Inicializada la tabla Ruta");
@@ -276,6 +271,23 @@ public class JDBCManager implements DBManager {
 		return ruta;
 	}
 
+	@Override
+	public Entrenador getEntrenadorById(int idEntrenador) {
+		Entrenador en = null;
+		try {
+			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_ID + idEntrenador);
+			if(rs.next()) {
+				int id = rs.getInt("Id");
+				String nombre = rs.getString("Nombre");
+				String genero = rs.getString("Genero");
+				en = new Entrenador(id, nombre, genero);
+			}			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return en;
+	}
 	
 	@Override
 	public int countElementsFromTable(String tableName) {
@@ -661,6 +673,46 @@ public class JDBCManager implements DBManager {
 		return exito;
 	}
 
+	public void setCantidad(EntrenadorPokemon ep) {
+		try {
+			int cantidadNueva = ep.getCantidad()+1;
+			prepSetCantidad.setInt(1, cantidadNueva);
+			prepSetCantidad.setInt(2, ep.getEntrenador().getId());
+			prepSetCantidad.setInt(3, ep.getPokemon().getId());
+			prepSetCantidad.executeUpdate();
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public EntrenadorPokemon getEntrenadorPokemon(Entrenador e1, Pokemon p) {
+	    EntrenadorPokemon ep = null;
+	    try {
+	        PreparedStatement prepSetEntrenadorPokemonByIds = c.prepareStatement(STMT_GET_ENTRENADORPOKEMON_BY_ID_ENTRENADOR);
+	        prepSetEntrenadorPokemonByIds.setInt(1, e1.getId());
+	        prepSetEntrenadorPokemonByIds.setInt(2, p.getId());
+	        ResultSet rs = prepSetEntrenadorPokemonByIds.executeQuery();
+
+	        if (rs.next()) {
+	            int idE = rs.getInt("IdEntrenador");
+	            Entrenador ent = getEntrenadorById(idE);
+	            int idP = rs.getInt("IdPokemon");
+	            Pokemon pok = getPokemonById(idP);
+	            int c = rs.getInt("Cantidad");
+	            
+	            ep = new EntrenadorPokemon(ent, pok, c);
+	        }
+
+	        rs.close();
+	        prepSetEntrenadorPokemonByIds.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return ep;
+	}
 
 
 	

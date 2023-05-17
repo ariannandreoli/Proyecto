@@ -131,7 +131,7 @@ public class Main {
 				CentroPokemon c = centros.get(randomInt(centros.size()));
 				EntrenadorCentro ec = new EntrenadorCentro (entrenador, c);
 				dbman.addEntrenadorCentro(ec);
-				//TODO Añadirun entrenador en cada centro 
+				//TODO Añadir un entrenador en cada centro 
 				}
 			
 	}
@@ -197,16 +197,29 @@ public class Main {
 		String nombreE = askForText("Indique su nombre: ");		 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
-		verMisPokemons();
+		int id=askForInt("Inserta tu id de entrenador: ");
+		
 		int idP = askForInt("Indique el del pokemon: ");
-		//if ()
-		//deberiamos chequear si el id que pone es igual al que tiene, si lo es aumenta la cantidad a uno, sino puedes añadir un pokemon nuevo
+		
+		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
+		for (int i = 0; i < pokemons.size(); i++) {
+			System.out.println(pokemons.get(i));
+			}
+		if(pokemons.contains(idP)) {
+			System.out.println("Ya lo tienes");
+			System.out.println(e);
+			System.out.println(dbman.getPokemonById(idP));
+			EntrenadorPokemon ep= dbman.getEntrenadorPokemon(e, dbman.getPokemonById(idP));
+			System.out.println(ep);
+
+			dbman.setCantidad(ep);
+		} else {
 		Pokemon p = dbman.getPokemonById(idP);
 		int cantidad = askForInt("Indique la cantidad de pokemones: ");		 
 		EntrenadorPokemon ep = new EntrenadorPokemon (e, p, cantidad);
 		System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
 		dbman.addEntrenadorPokemon(ep);
-		
+		}
 	}
 
 	private static void menuConsultarPokemones() {

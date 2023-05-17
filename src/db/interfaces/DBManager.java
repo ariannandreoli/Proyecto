@@ -66,6 +66,12 @@ public interface DBManager {
 	ArrayList<CentroPokemon> getCentros();
 
 	boolean addEntrenadorCentro(EntrenadorCentro ec);
+
+	Entrenador getEntrenadorById(int idEntrenador);
+	
+	EntrenadorPokemon getEntrenadorPokemon(Entrenador e1, Pokemon p);
+	
+	void setCantidad(EntrenadorPokemon ep);
 	
 
 
