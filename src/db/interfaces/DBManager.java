@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pojo.CentroPokemon;
 import pojo.Entrenador;
+import pojo.EntrenadorCentro;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.PokemonTipo;
@@ -61,6 +62,10 @@ public interface DBManager {
 	ArrayList<Tipo> getTipos();
 
 	ArrayList<PokemonTipo> getPokemonTipoByPokemon(Pokemon p);
+
+	ArrayList<CentroPokemon> getCentros();
+
+	boolean addEntrenadorCentro(EntrenadorCentro ec);
 	
 
 

@@ -16,6 +16,7 @@ import db.interfaces.DBManager;
 import factory.Factory;
 import pojo.CentroPokemon;
 import pojo.Entrenador;
+import pojo.EntrenadorCentro;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.PokemonTipo;
@@ -43,8 +44,7 @@ public class JDBCManager implements DBManager {
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
 	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";
 	private final String STMT_GET_TIPOS =  "SELECT * FROM Tipo;";
-	//private final String STMT_GET_POKEMON_ENTRENADOR_BY_ID= "SELECT * FROM EntrenadorPokemon WHERE IdEntrenador='";
-	//private final String STMT_CHECK_POKEMON_ENTRENADOR_BY_ID= "SELECT COUNT(*) FROM 'Entrenador-Pokemon' WHERE IdEntrenador = ? AND IdPokemon = ?";
+	private final String STMT_GET_CENTROS =  "SELECT * FROM Centro;";
 	private final String STMT_GET_TIPO_BY_ID= "SELECT * FROM Tipo WHERE Id=";
 	
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
@@ -52,9 +52,11 @@ public class JDBCManager implements DBManager {
 	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
 	private final String PREP_EVOLVE_POKEMON = "UPDATE Pokemon SET Nombre=?, Nivel=?, Habilidad=?, Genero=? WHERE Id=?;";
 	private final String PREP_LEVEL_UP_POKEMON = "UPDATE Pokemon SET Nivel=? WHERE Id=?;";
-	private final String PREP_EVOLVE_ENTRENADOR_POKEMON = "UPDATE 'Entrenador-Pokemon' SET IdEntrenador=?, IdPokemon=?, Cantidad=? WHERE IdPokemon=?;";
 	private final String PREP_ADD_CENTRO = "INSERT INTO Centro (Id, Trabajadores, Ciudad) VALUES (?,?,?);";
 	private final String PREP_ADD_POKEMON_ENTRENADOR = "INSERT INTO 'Entrenador-Pokemon' (IdPokemon, IdEntrenador, Cantidad) VALUES (?,?,?);";
+	private final String PREP_ADD_ENTRENADOR_CENTRO = "INSERT INTO 'Entrenador-Centro' (IdEntrenador, IdCentro) VALUES (?,?);";
+	
+	
 	private Statement stmt;
 	private PreparedStatement prepAddEntrenador;
 	private PreparedStatement prepAddPokemon;
@@ -63,7 +65,7 @@ public class JDBCManager implements DBManager {
 	private PreparedStatement prepLevelUpPokemon;
 	private PreparedStatement prepAddCentro;
 	private PreparedStatement prepAddEntrenadorPokemon;
-	private PreparedStatement prepEvolveEntrenadorPokemon;
+	private PreparedStatement prepAddEntrenadorCentro;
 	
 	private Connection c;
 	
@@ -99,7 +101,7 @@ public class JDBCManager implements DBManager {
 			prepLevelUpPokemon= c.prepareStatement(PREP_LEVEL_UP_POKEMON);
 			prepAddCentro = c.prepareStatement(PREP_ADD_CENTRO);
 			prepAddEntrenadorPokemon = c.prepareStatement(PREP_ADD_POKEMON_ENTRENADOR);
-			prepEvolveEntrenadorPokemon = c.prepareStatement(PREP_EVOLVE_ENTRENADOR_POKEMON);
+			prepAddEntrenadorCentro = c.prepareStatement(PREP_ADD_ENTRENADOR_CENTRO);
 			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
@@ -211,6 +213,27 @@ public class JDBCManager implements DBManager {
 		return tipos;
 	}
 	
+
+	@Override
+	public ArrayList<CentroPokemon> getCentros() {
+		ArrayList<CentroPokemon> centros = new ArrayList<>();
+		try (Statement stmt = c.createStatement()){
+			ResultSet rs = stmt.executeQuery(STMT_GET_CENTROS);
+			while(rs.next()) {
+				int id = rs.getInt("Id");
+				String ciudad = rs.getString("Ciudad");
+				String trabajadores = rs.getString("Trabajadores");
+				CentroPokemon centro = new CentroPokemon(id, trabajadores, ciudad);
+				centros.add(centro);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return centros;
+	}
+	
+	
 	@Override
 	public ArrayList<PokemonTipo> getPokemonTipoByPokemon (Pokemon p) {
 		ArrayList<PokemonTipo> pts = new ArrayList<>();
@@ -233,6 +256,8 @@ public class JDBCManager implements DBManager {
 		}
 		return pts;
 	}
+	
+	
 	
 	@Override
 	public Ruta getRutaById(int idRuta) {
@@ -619,5 +644,24 @@ public class JDBCManager implements DBManager {
 		return exito;
 	}
 	
+	@Override
+	public boolean addEntrenadorCentro (EntrenadorCentro ec) {
+		boolean exito = false;
+		try {
+			prepAddEntrenadorCentro.setInt(1, ec.getEntrenador().getId());
+			prepAddEntrenadorCentro.setInt(2, ec.getCentro().getId());
+			int resultado = prepAddEntrenadorCentro.executeUpdate();
+			if (resultado == 1) {
+				exito = true;
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return exito;
+	}
+
+
+
 	
 }

@@ -25,6 +25,7 @@ import factory.Factory;
 import logging.MyLogger;
 import pojo.CentroPokemon;
 import pojo.Entrenador;
+import pojo.EntrenadorCentro;
 import pojo.EntrenadorPokemon;
 import pojo.Pokemon;
 import pojo.PokemonTipo;
@@ -124,16 +125,14 @@ public class Main {
 				//TODO Añadir más de un entrenador por pokemon
 				}
 			
-			/*ArrayList<CentroPokemon> centros = dbman.getCentros();
-			ArrayList<Entrenador> entrenadores = dbman.getEntrenadores();
+			ArrayList<CentroPokemon> centros = dbman.getCentros();
 			for(int i = 0; i < entrenadores.size(); i++) {
 				Entrenador entrenador = entrenadores.get(i);
-				Pokemon pokemon = pokemons.get(randomInt(pokemons.size()));
-				int cantidad = randomInt(4) + 1;
-				EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
-				dbman.addEntrenadorPokemon(ep);
-				//TODO Añadir más de un entrenador por pokemon
-				}*/
+				CentroPokemon c = centros.get(randomInt(centros.size()));
+				EntrenadorCentro ec = new EntrenadorCentro (entrenador, c);
+				dbman.addEntrenadorCentro(ec);
+				//TODO Añadirun entrenador en cada centro 
+				}
 			
 	}
 	
@@ -388,21 +387,6 @@ public class Main {
 	}
 
 
-			
-	
-	/*private static Pokemon selectPokemon(ArrayList<Pokemon> pokemons) {		//no sirve porque dice que el arraylist esta vacio 
-		String[] opciones = new String[pokemons.size() + 1];
-		opciones[0] = "Cancelar";
-		for(int i = 0; i < pokemons.size(); i++) {
-			opciones[i + 1] = pokemons.get(i).getNombre();
-		}
-		int numPokemon = showMenu(opciones);
-		if(numPokemon == 0) {
-			return null;
-		}
-		return pokemons.get(numPokemon - 1);
-	}*/
-
 	
 	private static int askForInt(String text) {
 		int resultado = Integer.parseInt(askForText(text));
@@ -422,17 +406,6 @@ public class Main {
 		return resultado;
 	}
 	
-	/*private static Entrenador selectEntrenador() {
-		System.out.println("Elija el Entrenador del pokemon:");
-		ArrayList<Entrenador> entrenadores = dbman.getEntrenador();
-		String[] opciones = new String[entrenadores.size() + 1];
-		opciones[0] = "Cancelar";
-		for(int i = 0; i < entrenadores.size(); i++) {
-			opciones[i + 1] = entrenadores.get(i).getNombre();
-		}
-		int numEntrenador = showMenu(opciones);
-		return entrenadores.get(numEntrenador - 1);
-	}*/
 
 	private static int showMenu(String[] menu) {
 		int respuesta = -1;
@@ -505,8 +478,6 @@ private static void unmarshallingXML() {
 		}
 
 	}
-	
-	
 	
 	
 }
