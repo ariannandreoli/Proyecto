@@ -39,7 +39,7 @@ public class JDBCManager implements DBManager {
 	private final String STMT_GET_POKEMON_BY_NOMBRE = "SELECT * FROM Pokemon WHERE Nombre =''";
 	private final String STMT_GET_ENTRENADOR_BY_ID = "SELECT * FROM Entrenador WHERE Id='";	
 	private final String STMT_GET_POKEMONS = "SELECT * FROM Pokemon;";
-	private final String STMT_GET_POKEMON_TIPO = "SELECT * FROM PokemonTipo;";
+	private final String STMT_GET_POKEMON_TIPO_BY_POKEMONID = "SELECT * FROM PokemonTipo WHERE IdPokemon=";
 	private final String STMT_GET_RUTA_BY_ID = "SELECT * FROM Ruta WHERE Id="; 
 	private final String STMT_GET_USUARIO_BY_ID= "SELECT * FROM Usuario WHERE Id='";
 	private final String STMT_GET_TIPOS =  "SELECT * FROM Tipo;";
@@ -212,19 +212,19 @@ public class JDBCManager implements DBManager {
 	}
 	
 	@Override
-	public ArrayList<PokemonTipo> getPokemonTipo() {
+	public ArrayList<PokemonTipo> getPokemonTipoByPokemon (Pokemon p) {
 		ArrayList<PokemonTipo> pts = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
-			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_TIPO);
+			ResultSet rs = stmt.executeQuery(STMT_GET_POKEMON_TIPO_BY_POKEMONID + p.getId());
 			while(rs.next()) {
-				PokemonTipo pt = new PokemonTipo();
 				int idPokemon = rs.getInt("idPokemon");
-				Pokemon p = getPokemonById(idPokemon);
-				pt.setPokemon(p);
+				p = getPokemonById(idPokemon);
 				int idTipo = rs.getInt("idTipo");
 				Tipo t = getTipoById(idTipo);
-				pt.setTipo(t);
-				pts.add(pt);
+				PokemonTipo pokemonTipo = new PokemonTipo(p, t);
+				pokemonTipo.setPokemon(p);
+				pokemonTipo.setTipo(t);
+				pts.add(pokemonTipo);
 				
 			}
 		} catch (SQLException e) {

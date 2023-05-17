@@ -66,8 +66,13 @@ public class Main {
 				case 2 -> registrarse();
 			}
 		} while(respuesta != 0);
+		
+		marshallingXML();
+		unmarshallingXML();
+		
 		System.out.println("¡Gracias!");
 		dbman.disconnect();
+		
 	}
 	
 	private static void initializeDB() {
@@ -119,8 +124,17 @@ public class Main {
 				//TODO Añadir más de un entrenador por pokemon
 				}
 			
-			marshallingXML();
-			//unmarshallingXML();
+			/*ArrayList<CentroPokemon> centros = dbman.getCentros();
+			ArrayList<Entrenador> entrenadores = dbman.getEntrenadores();
+			for(int i = 0; i < entrenadores.size(); i++) {
+				Entrenador entrenador = entrenadores.get(i);
+				Pokemon pokemon = pokemons.get(randomInt(pokemons.size()));
+				int cantidad = randomInt(4) + 1;
+				EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
+				dbman.addEntrenadorPokemon(ep);
+				//TODO Añadir más de un entrenador por pokemon
+				}*/
+			
 	}
 	
 	private static void login() {
@@ -321,13 +335,22 @@ public class Main {
 		do {
 			respuesta = showMenu(MENU_GESTIONAR_ENTRENADOR_INGRESADO);
 			switch(respuesta) {
-				case 1 -> evolucionarPokemon();
+				case 1 -> crearXml();
 				case 2 -> subirMiNivel();
 				case 3 -> verTipoPokemon();
 			}
 		} while(respuesta != 0);
 	}
 
+
+	private static void crearXml() {
+		System.out.println("Se creara el fichero pokemon.xml con esta informacion: ");
+		marshallingXML();
+		
+		System.out.println("Con el fichero pokemon.xml obtenemos el siguiente pokemon: ");
+		unmarshallingXML();
+
+	}
 
 	private static void subirMiNivel() {	//sube de nivel al pokemon de la tabla completa ya que todos los entrenadores tienen pokemones con iguales cualidades 
 		
@@ -347,38 +370,6 @@ public class Main {
 			dbman.levelUp(pokemon);
 		}
 
-	private static void evolucionarPokemon() {				//cambiar esto a enseñar el tipo de pokemon
-		
-		System.out.println("El pokemon que selecione sera evolucionado y agregado en la tabla: ");
-		String nombrePokemon = askForText("Indique el nombre del pokemon:");		 
-		Pokemon pokemon = dbman.getPokemonByNombre(nombrePokemon.toUpperCase());		//null me sale de pokemon
-		System.out.println("El pokemon que se evolucionara es: " + pokemon);
-		if (pokemon != null)
-			System.out.println("El pokemon actual es " + pokemon.getNombre());
-			String nuevoNombre = askForText("Indique la evolucion del pokemon :");
-		if(!nuevoNombre.equals("")) {
-			pokemon.setNombre(nuevoNombre);
-		}
-		System.out.println("El nivel actual del pokemon es " + pokemon.getNivel());	//deberia mantener el mismo nivel
-		int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon:");
-		if(nuevoNivel != 0) {
-			pokemon.setNivel(nuevoNivel);
-		}
-		System.out.println("La habilidad actual del pokemon es " + pokemon.getHabilidad());
-		String nuevaHabilidad = askForText("Indique la nueva habilidad del pokemon:");
-		if(!nuevaHabilidad.equals("")) {
-			pokemon.setHabilidad(nuevaHabilidad);
-		}
-		System.out.println("El genero actual del pokemon es " + pokemon.getGenero());
-		String nuevoGenero = askForText("Indique la nueva habilidad del pokemon:");
-		if(!nuevoGenero.equals("")) {
-			pokemon.setGenero(nuevoGenero);
-		}
-		System.out.println("La ruta actual del pokemon es " + pokemon.getRutaP() + " donde se encontrara la evolucion tambien."); //debe mantener la misma ruta
-
-		dbman.evolvePokemon(pokemon);
-		
-	}
 	
 	private static void verTipoPokemon() {
 		String nombreE = askForText("Indique su nombre: ");		 
@@ -479,7 +470,7 @@ private static void unmarshallingXML() {
 			// Creamos el JAXBMarshaller
 			Unmarshaller jaxbU = jaxbC.createUnmarshaller();
 			// Leyendo un fichero
-			File XMLfile = new File("pokemons.xml");
+			File XMLfile = new File("./src/xml/pokemons.xml");
 			// Creando el objeto
 			Pokemon p = (Pokemon) jaxbU.unmarshal(XMLfile);
 			// Escribiendo por pantalla el objeto
@@ -493,8 +484,9 @@ private static void unmarshallingXML() {
 
 	private static void marshallingXML() {
 		List<Pokemon> pokemons = dbman.getPokemons();
-		List<Tipo> tipos = dbman.getTipos();
-		List<PokemonTipo> pt = dbman.getPokemonTipo();
+		Pokemon p = pokemons.get(1);
+		List<PokemonTipo> pt = dbman.getPokemonTipoByPokemon(p);
+		p.setPokemonTipos(pt);
 		
 		try {
 			JAXBContext jaxbC = JAXBContext.newInstance(Pokemon.class);
@@ -503,10 +495,10 @@ private static void unmarshallingXML() {
 			// Formateo bonito
 			jaxbM.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,Boolean.TRUE);
 			// Escribiendo en un fichero
-			File XMLfile = new File("pokemons.xml");
-			jaxbM.marshal(pokemons.get(0), XMLfile);
+			File XMLfile = new File("./src/xml/pokemons.xml");
+			jaxbM.marshal(p, XMLfile);
 			// Escribiendo por pantalla
-			//jaxbM.marshal(entrenadores.get(0), System.out);
+			jaxbM.marshal(p, System.out);
 		} catch (JAXBException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

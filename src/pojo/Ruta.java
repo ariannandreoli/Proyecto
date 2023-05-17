@@ -12,6 +12,14 @@ public class Ruta {
 
 	}
 	
+	
+	
+	public Ruta() {
+		super();
+	}
+
+
+
 	public int getId() {
 		return id;
 	}

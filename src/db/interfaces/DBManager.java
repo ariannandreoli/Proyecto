@@ -60,7 +60,7 @@ public interface DBManager {
 
 	ArrayList<Tipo> getTipos();
 
-	ArrayList<PokemonTipo> getPokemonTipo();
+	ArrayList<PokemonTipo> getPokemonTipoByPokemon(Pokemon p);
 	
 
 

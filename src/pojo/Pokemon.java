@@ -1,7 +1,6 @@
 package pojo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
@@ -12,7 +11,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @XmlRootElement(name = "Pokemon")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -38,9 +36,9 @@ public class Pokemon implements Serializable {
 	@XmlElement
 	private Ruta rutaP;
 	
-	@XmlElementWrapper(name = "Tipos")
-    @XmlElement(name = "Tipo")
-    private List<Tipo> tipos;
+	@XmlElement(name = "PokemonTipo")
+	@XmlElementWrapper(name = "PokemonTipos")
+    private List<PokemonTipo> pokemonTipos;
 	
 	
 	public Pokemon (int id, String nombre, int nivel, String habilidad, String genero) {
@@ -126,6 +124,14 @@ public class Pokemon implements Serializable {
 	}
 
 	
+	
+	public List<PokemonTipo> getPokemonTipos() {
+		return pokemonTipos;
+	}
+
+	public void setPokemonTipos(List<PokemonTipo> pokemonTipos) {
+		this.pokemonTipos = pokemonTipos;
+	}
 
 	@Override
 	public int hashCode() {

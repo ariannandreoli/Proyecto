@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Pokemon nombre="IVYSAUR">
+    <id>2</id>
+    <nivel>5</nivel>
+    <habilidad>ESPESURA</habilidad>
+    <genero>M</genero>
+    <rutaP>
+        <id>1</id>
+        <nombre>1</nombre>
+    </rutaP>
+    <PokemonTipos>
+        <PokemonTipo>
+            <tipo nombre="VENENO"/>
+        </PokemonTipo>
+        <PokemonTipo>
+            <tipo nombre="PLANTA"/>
+        </PokemonTipo>
+    </PokemonTipos>
+</Pokemon>
