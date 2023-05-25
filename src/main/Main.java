@@ -44,10 +44,12 @@ public class Main {
 	private final static String[] MENU_ENTRENADOR_LOGGED = {"Salir", "Actualizar Pokemones", "Consultar Pokemones", "Capturar Pokemon"};
 	private static final String[] MENU_ACTUALIZAR_POKEMONES = {"Salir","Add Pokemon", "Delete Pokemon"};
 	private static final String[] MENU_CONSULTAR_POKEMONES = {"Salir","Ver Pokemon", "Buscar Pokemon"};
-	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Evolucionar un Pokemon", "Subir nivel de un Pokemon", "Ver tipo Pokemon"};
+	private static final String[] MENU_GESTIONAR_ENTRENADOR_INGRESADO = {"Salir","Crear XML", "Subir nivel de un Pokemon", "Ver tipo Pokemon"};
 	private static Usuario usuario;
 	private static int NUM_USUARIOSE = 1000;
 	private static int NUM_USUARIOSC = 10;
+	private static Usuario usuarioLoggeado;
+	private static Usuario usuarioEnCentro;
 	
 	public static void main(String[] args) {
 		MyLogger.setupFromFile();
@@ -68,8 +70,6 @@ public class Main {
 			}
 		} while(respuesta != 0);
 		
-		marshallingXML();
-		unmarshallingXML();
 		
 		System.out.println("¡Gracias!");
 		dbman.disconnect();
@@ -143,6 +143,7 @@ public class Main {
 		if (usuario == null) {
 			System.out.println("Nombre o contraseña incorrectos");
 		} else {
+			usuarioLoggeado = usuario;
 			switch(usuario.getRol().getNombre()) {
 				case "entrenador" -> menuEntrenador();
 				case "centro_pokemon" -> menuCentroPokemon();
@@ -194,11 +195,13 @@ public class Main {
 		
 	
 	private static void menuCapturarPokemon() {
-		String nombreE = askForText("Indique su nombre: ");		 
+		String nombreE=usuarioLoggeado.getNombre(); 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
-		int id=askForInt("Inserta tu id de entrenador: ");
-		
+		int id=e.getId();
+		//int id=askForInt("Inserta tu id de entrenador: ");
+		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
+		verMisPokemons(id);
 		int idP = askForInt("Indique el del pokemon: ");
 		
 		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
@@ -257,15 +260,16 @@ public class Main {
 		} while(respuesta.equals("") && size == limit);
 	}
 	
-	private static void verMisPokemons() {
-		int id=askForInt("Inserta tu id de entrenador: ");
-		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
+	private static void verMisPokemons(int idE) {
+		//int id=askForInt("Inserta tu id de entrenador: ");
+		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(idE);
 		for (int i = 0; i < pokemons.size(); i++) {
 			System.out.println(pokemons.get(i));
 			}
-			pokemons.contains(id);
+			pokemons.contains(idE);
 	}
 
+	
 	private static void menuActualizarPokemones() {
 		System.out.println("Actualizando Pokedex");
 			int respuesta;
@@ -335,6 +339,8 @@ public class Main {
 		if (usuario == null) {
 			System.out.println("Nombre o contraseña incorrectos");
 		} else {
+			usuarioEnCentro= usuario;
+
 			switch(usuario.getRol().getNombre()) {
 				case "entrenador" -> menuPokemonDelEntrenador();
 			}
@@ -365,14 +371,14 @@ public class Main {
 	}
 
 	private static void subirMiNivel() {	//sube de nivel al pokemon de la tabla completa ya que todos los entrenadores tienen pokemones con iguales cualidades 
-		
-		String nombreE = askForText("Indique su nombre: ");		 
+		String nombreE=usuarioEnCentro.getNombre(); 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
-		System.out.println("Se mostraran sus pokemones, elija cual quiere subir de nivel: ");
-		verMisPokemons();
-		int id = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
-		Pokemon pokemon = dbman.getPokemonById(id);
+		int id=e.getId();
+		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
+		verMisPokemons(id);
+		int idP = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
+		Pokemon pokemon = dbman.getPokemonById(idP);
 		if (pokemon != null)
 			System.out.println("El pokemon actual es " + pokemon.getNombre());
 			int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon :");
@@ -384,11 +390,13 @@ public class Main {
 
 	
 	private static void verTipoPokemon() {
-		String nombreE = askForText("Indique su nombre: ");		 
+		String nombreE=usuarioEnCentro.getNombre(); 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
 		System.out.println("Se mostraran sus pokemones, elija de cual quiere ver su tipo: ");
-		verMisPokemons();
+		int id=e.getId();
+		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
+		verMisPokemons(id);
 		int idP = askForInt("Indique el Id del pokemon que quiere ver su tipo: ");
 		ArrayList<Integer> tipos = dbman.getTipoByPokemon(idP);
 		for (int i = 0; i < tipos.size(); i++) {
