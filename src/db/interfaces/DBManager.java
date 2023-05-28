@@ -35,8 +35,6 @@ public interface DBManager {
 
 	ArrayList<Pokemon> getPokemonByOrder(int inicio, int fin, int idLimit);
 
-	void evolvePokemon(Pokemon pokemon);
-
 	void levelUp(Pokemon pokemon);
 	
 	void addCentro(CentroPokemon centro);

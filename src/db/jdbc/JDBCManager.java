@@ -13,7 +13,6 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import db.interfaces.DBManager;
-import factory.Factory;
 import pojo.CentroPokemon;
 import pojo.Entrenador;
 import pojo.EntrenadorCentro;
@@ -51,7 +50,6 @@ public class JDBCManager implements DBManager {
 	private final String PREP_ADD_ENTRENADOR = "INSERT INTO Entrenador (Nombre, Genero) VALUES (?,?);";
 	private final String PREP_DELETE_POKEMON = "DELETE FROM Pokemon WHERE Id = ?;";
 	private final String PREP_ADD_POKEMON = "INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero, RutaP) VALUES (?,?,?,?,?);";
-	private final String PREP_EVOLVE_POKEMON = "UPDATE Pokemon SET Nombre=?, Nivel=?, Habilidad=?, Genero=? WHERE Id=?;";
 	private final String PREP_LEVEL_UP_POKEMON = "UPDATE Pokemon SET Nivel=? WHERE Id=?;";
 	private final String PREP_ADD_CENTRO = "INSERT INTO Centro (Id, Trabajadores, Ciudad) VALUES (?,?,?);";
 	private final String PREP_ADD_POKEMON_ENTRENADOR = "INSERT INTO 'Entrenador-Pokemon' (IdPokemon, IdEntrenador, Cantidad) VALUES (?,?,?);";
@@ -62,15 +60,12 @@ public class JDBCManager implements DBManager {
 	private PreparedStatement prepAddEntrenador;
 	private PreparedStatement prepAddPokemon;
 	private PreparedStatement prepDeletePokemon;
-	private PreparedStatement prepEvolvePokemon;
 	private PreparedStatement prepLevelUpPokemon;
 	private PreparedStatement prepAddCentro;
 	private PreparedStatement prepAddEntrenadorPokemon;
 	private PreparedStatement prepAddEntrenadorCentro;
 	private PreparedStatement prepSetCantidad;
 	private Connection c;
-	
-	private final int NUM_ENTRENADOR = 1000;
 
 	
 	@Override
@@ -98,13 +93,11 @@ public class JDBCManager implements DBManager {
 			prepAddEntrenador= c.prepareStatement(PREP_ADD_ENTRENADOR);
 			prepDeletePokemon = c.prepareStatement(PREP_DELETE_POKEMON);
 			prepAddPokemon= c.prepareStatement(PREP_ADD_POKEMON);
-			prepEvolvePokemon = c.prepareStatement(PREP_EVOLVE_POKEMON);
 			prepLevelUpPokemon= c.prepareStatement(PREP_LEVEL_UP_POKEMON);
 			prepAddCentro = c.prepareStatement(PREP_ADD_CENTRO);
 			prepAddEntrenadorPokemon = c.prepareStatement(PREP_ADD_POKEMON_ENTRENADOR);
 			prepAddEntrenadorCentro = c.prepareStatement(PREP_ADD_ENTRENADOR_CENTRO);
 			prepSetCantidad = c.prepareStatement(PREP_SET_CANTIDAD);
-			Factory factory = new Factory();
 			
 			if(countElementsFromTable("Pokemon") == 0) {
 				stmt.executeUpdate(readFile(FICHERO_DML_POKEMON));
@@ -414,7 +407,6 @@ public class JDBCManager implements DBManager {
 		}
 		
 		return result;
-		//return pokemon.getNombre();
 	}
 
 
@@ -469,7 +461,6 @@ public class JDBCManager implements DBManager {
 				int nivel = rs.getInt("Nivel");
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
-				//int rutaP = rs.getInt("RutaP");
 				pokemon = new Pokemon(id, nombre, nivel, habilidad, genero);
 				int idRuta = rs.getInt("RutaP");
 				Ruta ruta = getRutaById(idRuta);
@@ -520,36 +511,6 @@ public class JDBCManager implements DBManager {
 		return entrenador;
 	}
 	
-
-	
-	/*@Override
-	public void evolveEntrenadorPokemon (EntrenadorPokemon ep) {
-		try {
-			prepEvolveEntrenadorPokemon.setInt(1, ep.getEntrenador().getId());
-			prepEvolveEntrenadorPokemon.setInt(2, ep.getPokemon().getId());
-			prepEvolveEntrenadorPokemon.setInt(3, ep.getCantidad());
-			prepEvolveEntrenadorPokemon.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-	
-	@Override
-	public void evolvePokemon (Pokemon pokemon) {
-		try {
-			prepEvolvePokemon.setString(1, pokemon.getNombre());
-			prepEvolvePokemon.setInt(2, pokemon.getNivel());
-			prepEvolvePokemon.setString(3, pokemon.getHabilidad());
-			prepEvolvePokemon.setString(4, pokemon.getGenero());
-			//quiero la ruta se mantenga igual
-			prepEvolvePokemon.setInt(5, pokemon.getId());
-			prepEvolvePokemon.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
 	@Override
 	public ArrayList<Integer> getPokemonByEntrenador(int identrenador) {
