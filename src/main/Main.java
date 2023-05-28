@@ -301,7 +301,7 @@ public class Main {
 	    String habilidad = askForText("Indique la habilidad del pokemon:");
 	    String genero = askForText("Indique el genero del pokemon:");
 	    int rutaId = askForInt("Indique el id de la ruta:");
-	    Ruta ruta = new Ruta(rutaId, rutaId); 
+	    Ruta ruta = new Ruta(rutaId, "Ruta" + rutaId); 
 	    Pokemon pokemon = new Pokemon(-1, nombre.toUpperCase(), nivel , habilidad.toUpperCase(), genero.toUpperCase(), ruta);
 	    dbman.addPokemon(pokemon);
 	}

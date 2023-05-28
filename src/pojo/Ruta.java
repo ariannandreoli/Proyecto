@@ -3,9 +3,9 @@ package pojo;
 
 public class Ruta {
 	private int id;
-	private int nombre;
+	private String nombre;
 	
-	public Ruta(int id, int nombre) {
+	public Ruta(int id, String nombre) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
@@ -27,10 +27,10 @@ public class Ruta {
 		this.id = id;
 	}
 	
-	public int getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
-	public void setNombre(int nombre) {
+	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
 

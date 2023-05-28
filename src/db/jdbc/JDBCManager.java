@@ -261,7 +261,7 @@ public class JDBCManager implements DBManager {
 			ResultSet rs = stmt.executeQuery(STMT_GET_RUTA_BY_ID + idRuta);
 			if(rs.next()) {
 				int id = rs.getInt("Id");
-				int nombre = rs.getInt("Nombre");
+				String nombre = rs.getString("Nombre");
 				ruta = new Ruta(id, nombre);
 			}			
 		} catch (SQLException e) {
@@ -331,7 +331,7 @@ public class JDBCManager implements DBManager {
 	@Override
 	public boolean addEntrenador(Entrenador entrenador) {
 		try {
-			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_ID + entrenador.getId()+ "';");
+			ResultSet rs = stmt.executeQuery(STMT_GET_ENTRENADOR_BY_ID + entrenador.getId()+ ";");
 			if(rs.next()) {
 				return false;
 			}	
@@ -387,7 +387,7 @@ public class JDBCManager implements DBManager {
 	            String habilidad = rs.getString("Habilidad");
 	            String genero = rs.getString("Genero");
 	            int rutaP = rs.getInt("RutaP");
-				Ruta r= new Ruta (rutaP, rutaP);
+				Ruta r= new Ruta (rutaP, ("Ruta " + rutaP));
 				pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, r);
 	        }
 	    } catch (SQLException e) {
@@ -446,7 +446,7 @@ public class JDBCManager implements DBManager {
 				String habilidad = rs.getString("Habilidad");
 				String genero = rs.getString("Genero");
 				int rutaP = rs.getInt("RutaP");
-				Ruta r= new Ruta (rutaP, rutaP);
+				Ruta r= new Ruta (rutaP, ("Ruta " + rutaP));
 				Pokemon pokemon = new Pokemon(id,  nombre,  nivel, habilidad,  genero, r);
 				pokemons.add(pokemon);
 			}
