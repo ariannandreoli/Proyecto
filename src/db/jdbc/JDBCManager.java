@@ -84,7 +84,7 @@ public class JDBCManager implements DBManager {
 		createTables();
 		initializeTables();
 		LOGGER.info("Inicializada la conexión a la base de datos");
-		LOGGER.finest("Este es un mensaje finest");
+		//LOGGER.finest("Este es un mensaje finest");
 	}
 	
 	
@@ -428,7 +428,8 @@ public class JDBCManager implements DBManager {
 
 	@Override
 	public ArrayList<Pokemon> getPokemonByOrder(int offset, int limit, int idLimit) {
-		String sql = "SELECT * FROM Pokemon WHERE Id < " + idLimit + " ORDER BY Id ASC LIMIT " + limit + " OFFSET " + offset + ";";		ArrayList<Pokemon> pokemons = new ArrayList<>();
+		String sql = "SELECT * FROM Pokemon WHERE Id < " + idLimit + " ORDER BY Id ASC LIMIT " + limit + " OFFSET " + offset + ";";		
+		ArrayList<Pokemon> pokemons = new ArrayList<>();
 		try (Statement stmt = c.createStatement()){
 			ResultSet rs = stmt.executeQuery(sql);
 			while(rs.next()) {

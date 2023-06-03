@@ -10,7 +10,6 @@ import pojo.Entrenador;
 import pojo.Rol;
 import pojo.Usuario;
 
-//INSERTA EL ID Y EL GENERO PERO NO LE PONE NOMBRES ALEATORIOS 
 
 public class Factory {
 	private final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

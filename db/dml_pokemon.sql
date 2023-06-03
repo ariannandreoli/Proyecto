@@ -5,7 +5,7 @@ INSERT INTO Pokemon (Nombre, Nivel, Habilidad, Genero,  RutaP) VALUES
 ("CHARMANDER", 3, "MAR LLAMAS", NULL, 2),
 ("CHARMELEON", 5, "MAR LLAMAS", NULL, 2),
 ("CHARIZARD", 7, "MAR LLAMAS", NULL, 2),
-("SQUIRTOE", 6, "TORRENTE", "M", 4),
+("SQUIRTOLE", 6, "TORRENTE", "M", 4),
 ("WARTORTLE", 8, "TORRENTE", "M", 4),
 ("BLAISTOISE", 9, "TORRENTE", "M", 4),
 ("CATERPIE", 1, "POLVO ESCUDO", "F", 6),

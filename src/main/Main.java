@@ -70,7 +70,6 @@ public class Main {
 			}
 		} while(respuesta != 0);
 		
-		
 		System.out.println("¡Gracias!");
 		dbman.disconnect();
 		
@@ -199,11 +198,9 @@ public class Main {
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
 		int id=e.getId();
-		//int id=askForInt("Inserta tu id de entrenador: ");
 		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
 		verMisPokemons(id);
-		int idP = askForInt("Indique el del pokemon: ");
-		
+		int idP = askForInt("Indique el id del pokemon que quiere capturar: ");
 		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(id);
 		for (int i = 0; i < pokemons.size(); i++) {
 			System.out.println(pokemons.get(i));
@@ -260,13 +257,25 @@ public class Main {
 		} while(respuesta.equals("") && size == limit);
 	}
 	
-	private static void verMisPokemons(int idE) {
-		//int id=askForInt("Inserta tu id de entrenador: ");
+	private static void verMisPokemons(int idE) {		//muestra el id del pokemon que el entrenador tiene
 		ArrayList<Integer>pokemons = dbman.getPokemonByEntrenador(idE);
 		for (int i = 0; i < pokemons.size(); i++) {
 			System.out.println(pokemons.get(i));
 			}
 			pokemons.contains(idE);
+	}
+	
+	private static ArrayList<Integer> verMisPokemons2 (int idE) {		//enseña y devuelve los pokemones que el entrenador tiene
+	    ArrayList<Integer> pokemons = dbman.getPokemonByEntrenador(idE);
+	    ArrayList<Integer> pokemonIDs = new ArrayList<>();
+
+	    for (int i = 0; i < pokemons.size(); i++) {
+	        int pokemonID = pokemons.get(i);
+	        System.out.println(pokemonID);
+	        pokemonIDs.add(pokemonID);
+	    }
+
+	    return pokemonIDs;
 	}
 
 	
@@ -369,24 +378,30 @@ public class Main {
 		unmarshallingXML();
 
 	}
+	
+	private static void subirMiNivel() {
+	    String nombreE = usuarioEnCentro.getNombre();
+	    Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
+	    System.out.println(e);
+	    int id = e.getId();
+	    System.out.println("Actualmente el entrenador con id " + id + " tiene estos pokemons:");
+	    ArrayList<Integer> pokemonIDs = verMisPokemons2(id);
+	    int idP = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
 
-	private static void subirMiNivel() {	//sube de nivel al pokemon de la tabla completa ya que todos los entrenadores tienen pokemones con iguales cualidades 
-		String nombreE=usuarioEnCentro.getNombre(); 
-		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
-		System.out.println(e);
-		int id=e.getId();
-		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
-		verMisPokemons(id);
-		int idP = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
-		Pokemon pokemon = dbman.getPokemonById(idP);
-		if (pokemon != null)
-			System.out.println("El pokemon actual es " + pokemon.getNombre());
-			int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon :");
-			if(nuevoNivel != 0) {
-				pokemon.setNivel(nuevoNivel);
-			}
-			dbman.levelUp(pokemon);
-		}
+	    if (pokemonIDs.contains(idP)) {
+	        Pokemon pokemon = dbman.getPokemonById(idP);
+	        System.out.println("El pokemon actual es " + pokemon.getNombre());
+	        int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon: ");
+	        if (nuevoNivel != 0) {
+	            pokemon.setNivel(nuevoNivel);
+	            dbman.levelUp(pokemon);
+	        } else {
+	            System.out.println("El nuevo nivel no puede ser 0");
+	        }
+	    } else {
+	        System.out.println("No tienes ese pokemon, no puedes subir su nivel");
+	    }
+	}
 
 	
 	private static void verTipoPokemon() {
