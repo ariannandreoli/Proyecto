@@ -187,13 +187,33 @@ public class Main {
 				dbman.addEntrenador(entrenador);
 			} else {
 				String trabajador= askForText("Indique su nombre:");
-				String ciudad = askForText("Indique su ciudad:");
+				String ciudad = verificarNombreCiudad();
 				CentroPokemon centro = new CentroPokemon(usuario.getId(), trabajador.toUpperCase(), ciudad.toUpperCase() );
 				dbman.addCentro(centro);
 			}
 		} catch(NoSuchAlgorithmException e) {
 			LOGGER.warning("Error en el registro\n" + e);
 		}
+	}
+	
+	private static String verificarNombreCiudad() {
+		boolean f = false;
+		String ciudad = "";
+		while (f == false) {
+			
+			ciudad = askForText("Indique su ciudad:");
+			//System.out.println("El nombre de la ciudad no puede empezar por numero");
+			if (ciudad.startsWith("0") ||ciudad.startsWith("1") || ciudad.startsWith("2") || 
+				ciudad.startsWith("3") || ciudad.startsWith("4") || ciudad.startsWith("5") ||
+				ciudad.startsWith("6") || ciudad.startsWith("7") || ciudad.startsWith("8") || 
+				ciudad.startsWith("9") ) {
+				
+				System.out.println("El nombre de la ciudad no puede empezar por numero");
+			} else {
+				f = true;
+			}
+		}
+		return ciudad;
 	}
 	
 	private static void menuEntrenador() {
