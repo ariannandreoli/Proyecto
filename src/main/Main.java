@@ -1,5 +1,5 @@
-package main;		//lo relacionado con la interfaz 
-//QUITAR LA ENTIDAD DE POKEDEX
+package main;		
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -80,7 +80,6 @@ public class Main {
 		MessageDigest md;
 		List<Rol> roles = userman.getRoles();
 			for(int i = 0; i < NUM_USUARIOSE; i++) {
-				//TODO Añadir los USUARIOS a ENTRENADORES en batch
 				String pass = "1234";
 				byte[] hash = null;
 				try {
@@ -97,7 +96,6 @@ public class Main {
 				dbman.addEntrenador(entrenador);
 				
 			} for(int i = 0; i < NUM_USUARIOSC; i++) {
-				//TODO Añadir los USUARIOS a CENTRO en batch
 				String pass = "1234";
 				byte[] hash = null;
 				try {
@@ -121,7 +119,7 @@ public class Main {
 				int cantidad = randomInt(4) + 1;
 				EntrenadorPokemon ep = new EntrenadorPokemon(entrenador, pokemon, cantidad);
 				dbman.addEntrenadorPokemon(ep);
-				//TODO Añadir más de un entrenador por pokemon
+				//Añadir más de un entrenador por pokemon
 				}
 			
 			ArrayList<CentroPokemon> centros = dbman.getCentros();
@@ -130,7 +128,7 @@ public class Main {
 				CentroPokemon c = centros.get(randomInt(centros.size()));
 				EntrenadorCentro ec = new EntrenadorCentro (entrenador, c);
 				dbman.addEntrenadorCentro(ec);
-				//TODO Añadir un entrenador en cada centro 
+				//Añadir un entrenador en cada centro 
 				}
 			
 	}
