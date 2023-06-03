@@ -148,16 +148,33 @@ public class Main {
 		}
 	}
 	
+	private static int comprobarROL() {
+		boolean f = false;
+		int rolId = 0;
+		while (f == false) {
+			rolId = askForInt("Indique el id del rol:");
+			if (rolId == 1 || rolId==2) {
+				f = true;
+				
+			} else {
+				System.out.println("introduzca un numero valido");
+
+			}
+			
+		}
+		return rolId;
+	}
 	private static void registrarse() {
 		try {
-			String nombre = askForText("Indique su nombre:");
+			String nombre = verificarNombre();
 			String pass = askForText("Indique su contraseña:");
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(pass.getBytes());
 			byte[] hash = md.digest();
 			System.out.println(userman.getRoles());
-			int rolId = askForInt("Indique el id del rol:");
+			//int rolId = askForInt("Indique el id del rol:");
 			//TODO Asegurarse que el id es válido
+			int rolId = comprobarROL();
 			Rol rol = userman.getRolById(rolId);
 			Usuario usuario = new Usuario(nombre.toUpperCase(), hash, rol);
 			rol.addUsuario(usuario);
@@ -168,13 +185,52 @@ public class Main {
 				dbman.addEntrenador(entrenador);
 			} else {
 				String trabajador= askForText("Indique su nombre:");
-				String ciudad = askForText("Indique su ciudad:");
+				String ciudad = verificarNombreCiudad();
 				CentroPokemon centro = new CentroPokemon(usuario.getId(), trabajador.toUpperCase(), ciudad.toUpperCase() );
 				dbman.addCentro(centro);
 			}
 		} catch(NoSuchAlgorithmException e) {
 			LOGGER.warning("Error en el registro\n" + e);
 		}
+	}
+	
+	private static String verificarNombreCiudad() {
+		boolean f = false;
+		String ciudad = "";
+		while (f == false) {
+			
+			ciudad = askForText("Indique su ciudad:");
+		
+			if (ciudad.startsWith("0") ||ciudad.startsWith("1") || ciudad.startsWith("2") || 
+				ciudad.startsWith("3") || ciudad.startsWith("4") || ciudad.startsWith("5") ||
+				ciudad.startsWith("6") || ciudad.startsWith("7") || ciudad.startsWith("8") || 
+				ciudad.startsWith("9") ) {
+				
+				System.out.println("El nombre de la ciudad no puede empezar por numero");
+			} else {
+				f = true;
+			}
+		}
+		return ciudad;
+	}
+	private static String verificarNombre() {
+		boolean f = false;
+		String nombre = "";
+		while (f == false) {
+			
+			nombre = askForText("Indique su nombre:");
+		
+			if (nombre.startsWith("0") ||nombre.startsWith("1") || nombre.startsWith("2") || 
+				nombre.startsWith("3") || nombre.startsWith("4") || nombre.startsWith("5") ||
+				nombre.startsWith("6") || nombre.startsWith("7") || nombre.startsWith("8") || 
+				nombre.startsWith("9") ) {
+				
+				System.out.println("El nombre no puede empezar por numero");
+			} else {
+				f = true;
+			}
+		}
+		return nombre;
 	}
 	
 	private static void menuEntrenador() {
