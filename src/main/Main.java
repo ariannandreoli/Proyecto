@@ -168,7 +168,7 @@ public class Main {
 	}
 	private static void registrarse() {
 		try {
-			String nombre = askForText("Indique su nombre:");
+			String nombre = verificarNombre();
 			String pass = askForText("Indique su contraseña:");
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			md.update(pass.getBytes());
@@ -202,7 +202,7 @@ public class Main {
 		while (f == false) {
 			
 			ciudad = askForText("Indique su ciudad:");
-			//System.out.println("El nombre de la ciudad no puede empezar por numero");
+		
 			if (ciudad.startsWith("0") ||ciudad.startsWith("1") || ciudad.startsWith("2") || 
 				ciudad.startsWith("3") || ciudad.startsWith("4") || ciudad.startsWith("5") ||
 				ciudad.startsWith("6") || ciudad.startsWith("7") || ciudad.startsWith("8") || 
@@ -214,6 +214,25 @@ public class Main {
 			}
 		}
 		return ciudad;
+	}
+	private static String verificarNombre() {
+		boolean f = false;
+		String nombre = "";
+		while (f == false) {
+			
+			nombre = askForText("Indique su nombre:");
+		
+			if (nombre.startsWith("0") ||nombre.startsWith("1") || nombre.startsWith("2") || 
+				nombre.startsWith("3") || nombre.startsWith("4") || nombre.startsWith("5") ||
+				nombre.startsWith("6") || nombre.startsWith("7") || nombre.startsWith("8") || 
+				nombre.startsWith("9") ) {
+				
+				System.out.println("El nombre no puede empezar por numero");
+			} else {
+				f = true;
+			}
+		}
+		return nombre;
 	}
 	
 	private static void menuEntrenador() {
