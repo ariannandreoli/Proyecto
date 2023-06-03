@@ -150,6 +150,22 @@ public class Main {
 		}
 	}
 	
+	private static int comprobarROL() {
+		boolean f = false;
+		int rolId = 0;
+		while (f == false) {
+			rolId = askForInt("Indique el id del rol:");
+			if (rolId == 1 || rolId==2) {
+				f = true;
+				
+			} else {
+				System.out.println("introduzca un numero valido");
+
+			}
+			
+		}
+		return rolId;
+	}
 	private static void registrarse() {
 		try {
 			String nombre = askForText("Indique su nombre:");
@@ -158,8 +174,9 @@ public class Main {
 			md.update(pass.getBytes());
 			byte[] hash = md.digest();
 			System.out.println(userman.getRoles());
-			int rolId = askForInt("Indique el id del rol:");
+			//int rolId = askForInt("Indique el id del rol:");
 			//TODO Asegurarse que el id es válido
+			int rolId = comprobarROL();
 			Rol rol = userman.getRolById(rolId);
 			Usuario usuario = new Usuario(nombre.toUpperCase(), hash, rol);
 			rol.addUsuario(usuario);
