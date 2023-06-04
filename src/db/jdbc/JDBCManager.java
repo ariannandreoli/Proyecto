@@ -419,6 +419,7 @@ public class JDBCManager implements DBManager {
 			prepAddPokemon.setString(4, pokemon.getGenero());
 			prepAddPokemon.setInt(5, pokemon.getRutaP().getId());
 			prepAddPokemon.executeUpdate();
+			LOGGER.info("Pokemon: " + pokemon + " añadido con éxito");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -610,6 +611,7 @@ public class JDBCManager implements DBManager {
 			int resultado = prepAddEntrenadorPokemon.executeUpdate();
 			if (resultado == 1) {
 				exito = true;
+				//LOGGER.info("Agregado " + ep + "con exito");
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

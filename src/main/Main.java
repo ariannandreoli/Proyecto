@@ -157,7 +157,7 @@ public class Main {
 				f = true;
 				
 			} else {
-				System.out.println("introduzca un numero valido");
+				System.out.println("Introduzca un numero de rol valido");
 
 			}
 			
@@ -166,7 +166,6 @@ public class Main {
 	}
 	private static void registrarse() {
 		try {
-			
 			String nombre = verificarNombre();
 			String pass = askForText("Indique su contraseña:");
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -291,7 +290,6 @@ public class Main {
 			System.out.println(dbman.getPokemonById(idP));
 			EntrenadorPokemon ep= dbman.getEntrenadorPokemon(e, dbman.getPokemonById(idP));
 			System.out.println(ep);
-
 			dbman.setCantidad(ep);
 		} else {
 		Pokemon p = dbman.getPokemonById(idP);
@@ -380,7 +378,6 @@ public class Main {
 			System.out.println("El pokemon con id:  '" + id + "' se ha dejado ir con éxito");
 		} else {
 			System.out.println("No se ha podido soltar el pokemon con id:  '" + id + "'");
-			LOGGER.warning("No se ha podido soltar el pokemon con id: " + id);
 		}
 	}
 
