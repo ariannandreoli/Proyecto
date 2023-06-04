@@ -166,6 +166,7 @@ public class Main {
 	}
 	private static void registrarse() {
 		try {
+			
 			String nombre = verificarNombre();
 			String pass = askForText("Indique su contraseña:");
 			MessageDigest md = MessageDigest.getInstance("MD5");
@@ -180,7 +181,7 @@ public class Main {
 			rol.addUsuario(usuario);
 			userman.addUsuario(usuario);
 			if(rol.getNombre().equals("entrenador")) {
-				String genero = askForText("Indique su genero:");
+				String genero =  verificarGenero();
 				Entrenador entrenador = new Entrenador(0, nombre.toUpperCase(), genero.toUpperCase());
 				dbman.addEntrenador(entrenador);
 			} else {
@@ -193,6 +194,31 @@ public class Main {
 			LOGGER.warning("Error en el registro\n" + e);
 		}
 	}
+	
+	
+	
+	private static String verificarGenero() {
+		boolean f = false;
+		String genero = "";
+		while (f == false) {
+			
+			genero = askForText("Indique su genero:");
+		
+			if (genero.startsWith("0") ||genero.startsWith("1") || genero.startsWith("2") || 
+				genero.startsWith("3") || genero.startsWith("4") || genero.startsWith("5") ||
+				genero.startsWith("6") || genero.startsWith("7") || genero.startsWith("8") || 
+				genero.startsWith("9") ) {
+				
+				System.out.println("El genero no puede empezar por un número");
+			} else {
+				f = true;
+			}
+		}
+		return genero;
+	}
+
+
+
 	
 	private static String verificarNombreCiudad() {
 		boolean f = false;
