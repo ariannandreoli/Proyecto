@@ -608,8 +608,6 @@ public class Main {
 		System.out.println("El pokemon es de tipo: " + t);
 	}
 
-
-	
 	private static int askForInt(String text) {
 		int resultado = Integer.parseInt(askForText(text));
 		//TODO Comprobar que se puede convertir a int
