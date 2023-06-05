@@ -195,7 +195,6 @@ public class Main {
 	}
 	
 	
-	
 	private static String verificarGenero() {
 		boolean f = false;
 		String genero = "";
@@ -217,8 +216,6 @@ public class Main {
 	}
 
 
-
-	
 	private static String verificarNombreCiudad() {
 		boolean f = false;
 		String ciudad = "";
@@ -238,6 +235,7 @@ public class Main {
 		}
 		return ciudad;
 	}
+	
 	private static String verificarNombre() {
 		boolean f = false;
 		String nombre = "";
@@ -278,9 +276,9 @@ public class Main {
 	    int id = e.getId();
 	    System.out.println("Actualmente, el entrenador con id " + id + " tiene estos pokemons:");
 	    verMisPokemons(id);
-	    
+	    System.out.println("Se mostraran todos los pokemones para que vea las posibles opciones");
 	    try {
-	        Thread.sleep(5000); 
+	        Thread.sleep(2000); 
 	    } catch (InterruptedException ex) {
 	        ex.printStackTrace();
 	    }
@@ -323,8 +321,6 @@ public class Main {
 	}
 
 	
-	
-
 
 	private static void menuConsultarPokemones() {
 		int respuesta;
@@ -538,20 +534,15 @@ public class Main {
 	    int id = e.getId();
 	    System.out.println("Actualmente el entrenador con id " + id + " tiene estos pokemons:");
 	    ArrayList<Integer> pokemonIDs = verMisPokemons2(id);
-	    
 	    Integer idP = null;
-	    
 	    while (idP == null) {
 	        String input = askForText("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
-	        
 	        if (input.isEmpty()) {
 	            System.out.println("Debes ingresar un valor numérico para el id.");
 	            continue;
 	        }
-	        
 	        try {
 	            idP = Integer.parseInt(input);
-	            
 	            if (!pokemonIDs.contains(idP)) {
 	                System.out.println("No tienes ese pokemon, no puedes subir su nivel.");
 	                return;
@@ -560,23 +551,17 @@ public class Main {
 	            System.out.println("Debes ingresar un valor numérico para el id.");
 	        }
 	    }
-	    
 	    Pokemon pokemon = dbman.getPokemonById(idP);
 	    System.out.println("El pokemon actual es " + pokemon.getNombre());
-	    
 	    int nuevoNivel = 0;
-	    
 	    while (nuevoNivel == 0) {
 	        String input = askForText("Indique el nuevo nivel del pokemon: ");
-	        
 	        if (input.isEmpty()) {
 	            System.out.println("Debes ingresar un valor numérico para el nivel.");
 	            continue;
 	        }
-	        
 	        try {
 	            nuevoNivel = Integer.parseInt(input);
-	            
 	            if (nuevoNivel == 0) {
 	                System.out.println("El nuevo nivel no puede ser 0.");
 	            }
@@ -584,12 +569,9 @@ public class Main {
 	            System.out.println("Debes ingresar un valor numérico para el nivel.");
 	        }
 	    }
-	    
 	    pokemon.setNivel(nuevoNivel);
 	    dbman.levelUp(pokemon);
 	}
-
-	
 
 	
 	private static void verTipoPokemon() {
@@ -597,10 +579,26 @@ public class Main {
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
 		System.out.println("Se mostraran sus pokemones, elija de cual quiere ver su tipo: ");
-		int id=e.getId();
+		int id= e.getId();
 		System.out.println("Actualmente el entrenador con id "+id+" tiene estos pokemons:");
-		verMisPokemons(id);
-		int idP = askForInt("Indique el Id del pokemon que quiere ver su tipo: ");
+		ArrayList<Integer> pokemonIDs = verMisPokemons2(id);
+	    Integer idP = null;
+	    while (idP == null) {
+	        String input = askForText("Inserta el id del pokemon que tiene y que va a ver su tipo: ");
+	        if (input.isEmpty()) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	            continue;
+	        }
+	        try {
+	            idP = Integer.parseInt(input);
+	            if (!pokemonIDs.contains(idP)) {
+	                System.out.println("No tienes ese pokemon, no puedes ver su tipo.");
+	                return;
+	            }
+	        } catch (NumberFormatException ex) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	        }
+	    }
 		ArrayList<Integer> tipos = dbman.getTipoByPokemon(idP);
 		for (int i = 0; i < tipos.size(); i++) {
 			System.out.println("Sus tipos son: " + tipos.get(i));
