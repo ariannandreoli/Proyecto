@@ -370,15 +370,32 @@ public class Main {
 		}
 
 
-	private static void menuRealeasePokemon() {		
-		verPokemons();
-		int id = askForInt("Inserta el id del pokemon que quiere eliminar: ");
-		int result = dbman.releasePokemon(id);
-		if(result == 1) {
-			System.out.println("El pokemon con id:  '" + id + "' se ha dejado ir con éxito");
-		} else {
-			System.out.println("No se ha podido soltar el pokemon con id:  '" + id + "'");
-		}
+
+
+	private static void menuRealeasePokemon() {
+	    verPokemons();
+	    
+	    int id = 0;
+	    boolean validInput = false;
+	    
+	    while (!validInput) {
+	        String input = askForText("Inserta el id del pokemon que quieres eliminar: ");
+	        
+	        try {
+	            id = Integer.parseInt(input);
+	            validInput = true; // Si no se produce una excepción, el valor ingresado es válido
+	        } catch (NumberFormatException e) {
+	            System.out.println("¡Error! Debes ingresar un valor numérico para el id.");
+	        }
+	    }
+	    
+	    int result = dbman.releasePokemon(id);
+	    
+	    if (result == 1) {
+	        System.out.println("El pokemon con id '" + id + "' se ha liberado con éxito.");
+	    } else {
+	        System.out.println("No se ha podido liberar el pokemon con id '" + id + "'.");
+	    }
 	}
 
 
