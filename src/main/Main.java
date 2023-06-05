@@ -280,7 +280,7 @@ public class Main {
 	    verMisPokemons(id);
 	    
 	    try {
-	        Thread.sleep(5000); // Pausa de 2 segundos (puedes ajustar el tiempo de espera aquí)
+	        Thread.sleep(5000); 
 	    } catch (InterruptedException ex) {
 	        ex.printStackTrace();
 	    }
@@ -530,6 +530,7 @@ public class Main {
 
 	}
 	
+	
 	private static void subirMiNivel() {
 	    String nombreE = usuarioEnCentro.getNombre();
 	    Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
@@ -537,22 +538,58 @@ public class Main {
 	    int id = e.getId();
 	    System.out.println("Actualmente el entrenador con id " + id + " tiene estos pokemons:");
 	    ArrayList<Integer> pokemonIDs = verMisPokemons2(id);
-	    int idP = askForInt("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
-
-	    if (pokemonIDs.contains(idP)) {
-	        Pokemon pokemon = dbman.getPokemonById(idP);
-	        System.out.println("El pokemon actual es " + pokemon.getNombre());
-	        int nuevoNivel = askForInt("Indique el nuevo nivel del pokemon: ");
-	        if (nuevoNivel != 0) {
-	            pokemon.setNivel(nuevoNivel);
-	            dbman.levelUp(pokemon);
-	        } else {
-	            System.out.println("El nuevo nivel no puede ser 0");
+	    
+	    Integer idP = null;
+	    
+	    while (idP == null) {
+	        String input = askForText("Inserta el id del pokemon que tiene y que va a subir de nivel: ");
+	        
+	        if (input.isEmpty()) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	            continue;
 	        }
-	    } else {
-	        System.out.println("No tienes ese pokemon, no puedes subir su nivel");
+	        
+	        try {
+	            idP = Integer.parseInt(input);
+	            
+	            if (!pokemonIDs.contains(idP)) {
+	                System.out.println("No tienes ese pokemon, no puedes subir su nivel.");
+	                return;
+	            }
+	        } catch (NumberFormatException ex) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	        }
 	    }
+	    
+	    Pokemon pokemon = dbman.getPokemonById(idP);
+	    System.out.println("El pokemon actual es " + pokemon.getNombre());
+	    
+	    int nuevoNivel = 0;
+	    
+	    while (nuevoNivel == 0) {
+	        String input = askForText("Indique el nuevo nivel del pokemon: ");
+	        
+	        if (input.isEmpty()) {
+	            System.out.println("Debes ingresar un valor numérico para el nivel.");
+	            continue;
+	        }
+	        
+	        try {
+	            nuevoNivel = Integer.parseInt(input);
+	            
+	            if (nuevoNivel == 0) {
+	                System.out.println("El nuevo nivel no puede ser 0.");
+	            }
+	        } catch (NumberFormatException ex) {
+	            System.out.println("Debes ingresar un valor numérico para el nivel.");
+	        }
+	    }
+	    
+	    pokemon.setNivel(nuevoNivel);
+	    dbman.levelUp(pokemon);
 	}
+
+	
 
 	
 	private static void verTipoPokemon() {
