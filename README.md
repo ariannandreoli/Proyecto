@@ -15,7 +15,7 @@ Francisco Lopez
 Crearemos una aplicacion que guarde la informacion sobre pokemons, sus nombres, tipos, genero, y habilidades. La aplicacion permitirá que los entrenadores consulten la informacion de algún pokemon segun lo que les interese, ademas de atrapar a pokemones y actulizar su cantidad. Los trabajadores de los pokemon center puedan facilitarle al entrenador realizar tareas que sin su ayuda no pueden realizar y les indica donde puedes capturar a un pokemon.  
 
 ---
-## Diagrama UML
+## Diagrama UML 
 
   El diagrama UML consta de dos actores: entrenador pokemon y centro pokemon.
 
@@ -28,6 +28,8 @@ A continuación, notaremos los casos de uso de nuestro sistema, estos son las ac
 El entrenador puede consultar información sobre un pokemon cualquiera, ya sea de él o no, si ya consigue alguno nuevo puede capturarlo e incluso agregar esta información a las características del pokemon. 
 El centro Pokemon sera capaz de ayudar al entrenador a localizar los pokemons y ayudar al entrenador a realizar acciones como aumentar el nivel de un pokemon. 
 Por último, nuestro sistema Mundo Pokemon que lo utilizamos para definir el alcance de los casos de uso y aparece representado como un rectángulo.
+
+![UML](https://github.com/ariannandreoli/Proyecto/blob/main/fotos/DiagraClase.jpg)
 
 
 ---
