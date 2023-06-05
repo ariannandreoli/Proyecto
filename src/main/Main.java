@@ -272,7 +272,7 @@ public class Main {
 	}
 		
 	
-	private static void menuCapturarPokemon() {
+	/*private static void menuCapturarPokemon() {
 		String nombreE=usuarioLoggeado.getNombre(); 
 		Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
 		System.out.println(e);
@@ -298,7 +298,53 @@ public class Main {
 		System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
 		dbman.addEntrenadorPokemon(ep);
 		}
+	}*/
+	
+	private static void menuCapturarPokemon() {
+	    String nombreE = usuarioLoggeado.getNombre();
+	    Entrenador e = dbman.getEntrenadorByNombre(nombreE.toUpperCase());
+	    System.out.println(e);
+	    int id = e.getId();
+	    System.out.println("Actualmente, el entrenador con id " + id + " tiene estos pokemons:");
+	    verMisPokemons(id);
+	    
+	    Integer idP = null;
+	    ArrayList<Integer> pokemons = dbman.getPokemonByEntrenador(id);
+	    
+	    while (idP == null) {
+	        String input = askForText("Indique el id del pokemon que quiere capturar: ");
+	        
+	        if (input.isEmpty()) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	            continue;
+	        }
+	        
+	        try {
+	            idP = Integer.parseInt(input);
+	            
+	            if (pokemons.contains(idP)) {
+	                System.out.println("Ya tienes este pokemon.");
+	                System.out.println(e);
+	                System.out.println(dbman.getPokemonById(idP));
+	                EntrenadorPokemon ep = dbman.getEntrenadorPokemon(e, dbman.getPokemonById(idP));
+	                System.out.println(ep);
+	                dbman.setCantidad(ep);
+	                return;
+	            }
+	        } catch (NumberFormatException ex) {
+	            System.out.println("Debes ingresar un valor numérico para el id.");
+	        }
+	    }
+	    
+	    Pokemon p = dbman.getPokemonById(idP);
+	    
+	    int cantidad = askForInt("Indique la cantidad de pokemones: ");
+	    
+	    EntrenadorPokemon ep = new EntrenadorPokemon(e, p, cantidad);
+	    System.out.println("Ahora el entrenador " + ep.getEntrenador() + " tiene " + ep.getCantidad() + " de " + ep.getPokemon());
+	    dbman.addEntrenadorPokemon(ep);
 	}
+
 
 	private static void menuConsultarPokemones() {
 		int respuesta;
