@@ -381,17 +381,48 @@ public class Main {
 		}
 	}
 
-	private static void menuAddPokemon() {		
-	    String nombre = askForText("Indique el nombre del pokemon:");
-	    int nivel = askForInt("Indique el nivel del pokemon:");
-	    String habilidad = askForText("Indique la habilidad del pokemon:");
-	    String genero = askForText("Indique el genero del pokemon:");
-	    int rutaId = askForInt("Indique el id de la ruta:");
-	    Ruta ruta = new Ruta(rutaId, "Ruta" + rutaId); 
-	    Pokemon pokemon = new Pokemon(-1, nombre.toUpperCase(), nivel , habilidad.toUpperCase(), genero.toUpperCase(), ruta);
+
+	private static void menuAddPokemon() {
+	    String nombre = "";
+	    int nivel = 0;
+	    String habilidad = "";
+	    String genero = "";
+	    int rutaId = 0;
+	    Ruta ruta = null;
+	    Pokemon pokemon = null;
+
+	    while (nombre.isEmpty() || Character.isDigit(nombre.charAt(0))) {
+	        nombre = askForText("Indique el nombre del pokemon:");
+	    }
+
+	    while (true) {
+	        try {
+	            nivel = askForInt("Indique el nivel del pokemon:");
+	            break; // Si no se produce una excepción, salimos del bucle
+	        } catch (NumberFormatException e) {
+	            System.out.println("¡Error! Debe ingresar un valor numérico para el nivel.");
+	        }
+	    }
+
+	    while (habilidad.isEmpty() || Character.isDigit(habilidad.charAt(0))) {
+	        habilidad = askForText("Indique la habilidad del pokemon:");
+	    }
+
+	    while (genero.isEmpty() || Character.isDigit(genero.charAt(0))) {
+	        genero = askForText("Indique el genero del pokemon:");
+	    }
+
+	    while (rutaId == 0) {
+	        rutaId = askForInt("Indique el id de la ruta:");
+	    }
+
+	    ruta = new Ruta(rutaId, "Ruta" + rutaId);
+	    pokemon = new Pokemon(-1, nombre.toUpperCase(), nivel, habilidad.toUpperCase(), genero.toUpperCase(), ruta);
 	    dbman.addPokemon(pokemon);
 	}
-	
+
+
+
 	private static void menuCentroPokemon() {
 		System.out.println("Menú Centro Pokemon");
 		int respuesta;
